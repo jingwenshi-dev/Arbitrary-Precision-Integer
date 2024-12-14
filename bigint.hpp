@@ -46,9 +46,8 @@ private:
 
     static std::vector<std::uint8_t>
     add_abs(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
-
         std::vector<std::uint8_t> result;
-        result.reserve(std::max(lhs.size(), rhs.size()) + 1);   // Max size, e.g. 999 + 999 = 1998 -> 4 digits
+        result.reserve(std::max(lhs.size(), rhs.size()) + 1); // Max size, e.g. 999 + 999 = 1998 -> 4 digits
 
         std::uint8_t carry = 0;
 
@@ -64,8 +63,8 @@ private:
         return result;
     }
 
-    static std::vector<std::uint8_t>
-    subtract_abs(const std::vector<std::uint8_t> &big, const std::vector<std::uint8_t> &small) {
+    static std::vector<std::uint8_t> subtract_abs(const std::vector<std::uint8_t> &big,
+                                                  const std::vector<std::uint8_t> &small) {
         std::vector<std::uint8_t> result;
         result.reserve(big.size()); // Min size, e.g. 999 - 0 = 999 -> 3 digits
 
@@ -78,7 +77,8 @@ private:
             }
 
             if (diff < 0) {
-                diff += 10; // If the digit is negative -> Not enough to subtract -> borrow 1 from next digit -> add 10 to current digit
+                diff += 10;
+                // If the digit is negative -> Not enough to subtract -> borrow 1 from next digit -> add 10 to current digit
                 borrow = 1; // Borrow 1 from next digit
             } else {
                 borrow = 0;
@@ -89,20 +89,20 @@ private:
         return result;
     }
 
-    static std::vector<std::uint8_t>
-    multiply_abs(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
+    static std::vector<std::uint8_t> multiply_abs(const std::vector<std::uint8_t> &lhs,
+                                                  const std::vector<std::uint8_t> &rhs) {
         if (is_zero(lhs) || is_zero(rhs)) return {0};
 
         std::vector<std::uint8_t> result;
-        result.reserve(lhs.size() + rhs.size());    // Max size, e.g. 999 * 999 = 998001 -> 6 digits
+        result.resize(lhs.size() + rhs.size()); // Max size, e.g. 999 * 999 = 998001 -> 6 digits
 
         // In vertical multiplication form, it does not matter if the lhs or rhs is above the other, it will result in the same addition pattern.
         for (std::size_t i = 0; i < lhs.size(); i++) {
             std::uint8_t carry = 0;
 
             for (std::size_t j = 0; j < rhs.size(); j++) {
-                std::uint8_t curr =
-                        result[i + j] + carry;  // Add carry and the digit above the current one in vertical form
+                std::uint8_t curr = result[i + j] + carry;
+                // Add carry and the digit above the current one in vertical form
                 curr += static_cast<std::uint8_t>(lhs[i] * rhs[j]);
 
                 result[i + j] = curr % 10;
@@ -215,7 +215,6 @@ public:
         this->digits = multiply_abs(this->digits, rhs.digits);
         return *this;
     }
-
 };
 
 #endif
