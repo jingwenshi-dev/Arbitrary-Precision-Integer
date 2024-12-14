@@ -108,6 +108,10 @@ private:
                 result[i + j] = curr % 10;
                 carry = static_cast<std::uint8_t>(curr / 10);
             }
+            // Handle the last carry
+            if (carry) {
+                result[i + rhs.size()] = carry;
+            }
         }
         return result;
     }
