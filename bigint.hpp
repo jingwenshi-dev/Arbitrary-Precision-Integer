@@ -219,6 +219,22 @@ public:
         this->digits = multiply_abs(this->digits, rhs.digits);
         return *this;
     }
+
+    // Binary Operators
+    bigint operator+(bigint lhs, const bigint &rhs) const {
+        lhs += rhs;
+        return lhs;
+    }
+
+    bigint operator-(bigint lhs, const bigint &rhs) const {
+        lhs -= rhs;
+        return lhs;
+    }
+
+    bigint operator*(bigint lhs, const bigint &rhs) const {
+        lhs *= rhs;
+        return lhs;
+    }
 };
 
 #endif
