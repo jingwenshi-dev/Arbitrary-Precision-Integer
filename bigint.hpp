@@ -12,7 +12,7 @@ private:
     bool isNegative{};
     std::vector<std::uint8_t> digits;
 
-    void str_to_bigint(const std::string& str) {
+    void str_to_bigint(const std::string &str) {
         isNegative = str[0] == '-';
         size_t start = 0;
 
@@ -30,21 +30,22 @@ private:
         }
     }
 
-    static bool is_abs_less_than(const std::vector<std::uint8_t>& lhs, const std::vector<std::uint8_t>& rhs) {
+    static bool is_abs_less_than(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
         if (lhs.size() != rhs.size()) return lhs.size() < rhs.size();
 
         for (std::size_t i = lhs.size(); i > 0; --i) {
-            if (lhs[i-1] != rhs[i-1]) return lhs[i-1] < rhs[i-1];
+            if (lhs[i - 1] != rhs[i - 1]) return lhs[i - 1] < rhs[i - 1];
         }
 
         return false;
     }
 
-    static bool is_zero(const std::vector<std::uint8_t>& num) {
+    static bool is_zero(const std::vector<std::uint8_t> &num) {
         return num.size() == 1 && num[0] == 0;
     }
 
-    static std::vector<std::uint8_t> add_abs(const std::vector<std::uint8_t>& lhs, const std::vector<std::uint8_t>& rhs) {
+    static std::vector<std::uint8_t>
+    add_abs(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
 
         std::vector<std::uint8_t> result;
         result.reserve(std::max(lhs.size(), rhs.size()) + 1);   // Max size, e.g. 999 + 999 = 1998 -> 4 digits
@@ -63,28 +64,33 @@ private:
         return result;
     }
 
-    static std::vector<std::uint8_t> subtract_abs(const std::vector<std::uint8_t>& big, const std::vector<std::uint8_t>& small) {
+    static std::vector<std::uint8_t>
+    subtract_abs(const std::vector<std::uint8_t> &big, const std::vector<std::uint8_t> &small) {
         std::vector<std::uint8_t> result;
         result.reserve(big.size()); // Min size, e.g. 999 - 0 = 999 -> 3 digits
 
         std::uint8_t borrow = 0;
 
         for (std::size_t i = 0; i < big.size(); i++) {
-            std::uint8_t diff = big[i] - borrow;
-            if (i < small.size()) diff -= small[i];
+            std::int64_t diff = big[i] - borrow;
+            if (i < small.size()) {
+                diff -= small[i];
+            }
 
             if (diff < 0) {
                 diff += 10; // If the digit is negative -> Not enough to subtract -> borrow 1 from next digit -> add 10 to current digit
                 borrow = 1; // Borrow 1 from next digit
+            } else {
+                borrow = 0;
             }
-            borrow = 0;
-            result.push_back(diff);
+            result.push_back(static_cast<std::uint8_t>(diff));
         }
 
         return result;
     }
 
-    static std::vector<std::uint8_t> multiply_abs(const std::vector<std::uint8_t>& lhs, const std::vector<std::uint8_t>& rhs) {
+    static std::vector<std::uint8_t>
+    multiply_abs(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
         if (is_zero(lhs) || is_zero(rhs)) return {0};
 
         std::vector<std::uint8_t> result;
@@ -95,11 +101,12 @@ private:
             std::uint8_t carry = 0;
 
             for (std::size_t j = 0; j < rhs.size(); j++) {
-                std::uint64_t curr = result[i+j] + carry;  // Add carry and the digit above the current one in vertical form
-                curr += lhs[i] * rhs[j];
+                std::uint8_t curr =
+                        result[i + j] + carry;  // Add carry and the digit above the current one in vertical form
+                curr += static_cast<std::uint8_t>(lhs[i] * rhs[j]);
 
                 result[i + j] = curr % 10;
-                carry = curr / 10;
+                carry = static_cast<std::uint8_t>(curr / 10);
             }
         }
         return result;
@@ -132,7 +139,7 @@ public:
         }
     }
 
-    explicit bigint(const std::string& str) {
+    explicit bigint(const std::string &str) {
         if (str.empty()) throw std::invalid_argument("Empty string is not permitted");
         str_to_bigint(str);
     }
@@ -153,7 +160,7 @@ public:
     }
 
     // Increment: Prefix
-    bigint& operator++() {
+    bigint &operator++() {
         *this += bigint(1);
         return *this;
     }
@@ -166,7 +173,7 @@ public:
     }
 
     // Decrement: Prefix
-    bigint& operator--() {
+    bigint &operator--() {
         *this -= bigint(1);
         return *this;
     }
@@ -179,7 +186,7 @@ public:
     }
 
     // Compound Assignment Operators
-    bigint& operator+=(const bigint& rhs) {
+    bigint &operator+=(const bigint &rhs) {
         // Add abs values if signs are the same
         if (this->isNegative == rhs.isNegative) {
             this->digits = add_abs(this->digits, rhs.digits);
@@ -198,12 +205,12 @@ public:
         return *this;
     }
 
-    bigint& operator-=(const bigint& rhs) {
+    bigint &operator-=(const bigint &rhs) {
         *this += -rhs;
         return *this;
     }
 
-    bigint& operator*=(const bigint& rhs) {
+    bigint &operator*=(const bigint &rhs) {
         this->isNegative = this->isNegative != rhs.isNegative;
         this->digits = multiply_abs(this->digits, rhs.digits);
         return *this;
