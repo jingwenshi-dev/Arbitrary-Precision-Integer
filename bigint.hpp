@@ -40,6 +40,10 @@ private:
         return false;
     }
 
+    static bool is_zero(const std::vector<std::uint8_t>& num) {
+        return num.size() == 1 && num[0] == 0;
+    }
+
     static std::vector<std::uint8_t> add_abs(const std::vector<std::uint8_t>& lhs, const std::vector<std::uint8_t>& rhs) {
 
         std::vector<std::uint8_t> result;
@@ -81,21 +85,23 @@ private:
     }
 
     static std::vector<std::uint8_t> multiply_abs(const std::vector<std::uint8_t>& lhs, const std::vector<std::uint8_t>& rhs) {
-        // bool leftIsZero = this->digits.size() == 1 && this->digits[0] == 0;
-        // bool rightIsZero = rhs.size() == 1 && rhs[0] == 0;
-        //
-        // if (leftIsZero || rightIsZero) {
-        //     this->digits = {0};
-        //     this->isNegative = false;
-        //     return;
-        // }
-
-        // TODO: Implement multiplication
+        if (is_zero(lhs) || is_zero(rhs)) return {0};
 
         std::vector<std::uint8_t> result;
         result.reserve(lhs.size() + rhs.size());    // Max size, e.g. 999 * 999 = 998001 -> 6 digits
 
+        // In vertical multiplication form, it does not matter if the lhs or rhs is above the other, it will result in the same addition pattern.
+        for (std::size_t i = 0; i < lhs.size(); i++) {
+            std::uint8_t carry = 0;
 
+            for (std::size_t j = 0; j < rhs.size(); j++) {
+                std::uint64_t curr = result[i+j] + carry;  // Add carry and the digit above the current one in vertical form
+                curr += lhs[i] * rhs[j];
+
+                result[i + j] = curr % 10;
+                carry = curr / 10;
+            }
+        }
         return result;
     }
 
