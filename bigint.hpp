@@ -33,7 +33,7 @@ private:
     static bool is_abs_less_than(const std::vector<std::uint8_t>& lhs, const std::vector<std::uint8_t>& rhs) {
         if (lhs.size() != rhs.size()) return lhs.size() < rhs.size();
 
-        for (std::vector<std::uint8_t>::size_type i = lhs.size(); i > 0; --i) {
+        for (std::size_t i = lhs.size(); i > 0; --i) {
             if (lhs[i-1] != rhs[i-1]) return lhs[i-1] < rhs[i-1];
         }
 
@@ -43,11 +43,11 @@ private:
     static std::vector<std::uint8_t> add_abs(const std::vector<std::uint8_t>& lhs, const std::vector<std::uint8_t>& rhs) {
 
         std::vector<std::uint8_t> result;
-        result.reserve(std::max(lhs.size(), rhs.size()) + 1);
+        result.reserve(std::max(lhs.size(), rhs.size()) + 1);   // Max size, e.g. 999 + 999 = 1998 -> 4 digits
 
         std::uint8_t carry = 0;
 
-        for (std::vector<std::uint8_t>::size_type i = 0; i < lhs.size(); i++) {
+        for (std::size_t i = 0; i < lhs.size(); i++) {
             std::uint8_t sum = carry + lhs[i];
             if (i < rhs.size()) sum += rhs[i];
 
@@ -61,8 +61,21 @@ private:
 
     static std::vector<std::uint8_t> subtract_abs(const std::vector<std::uint8_t>& big, const std::vector<std::uint8_t>& small) {
         std::vector<std::uint8_t> result;
+        result.reserve(big.size()); // Min size, e.g. 999 - 0 = 999 -> 3 digits
 
-        // TODO: Implement subtraction
+        std::uint8_t borrow = 0;
+
+        for (std::size_t i = 0; i < big.size(); i++) {
+            std::uint8_t diff = big[i] - borrow;
+            if (i < small.size()) diff -= small[i];
+
+            if (diff < 0) {
+                diff += 10; // If the digit is negative -> Not enough to subtract -> borrow 1 from next digit -> add 10 to current digit
+                borrow = 1; // Borrow 1 from next digit
+            }
+            borrow = 0;
+            result.push_back(diff);
+        }
 
         return result;
     }
@@ -80,6 +93,9 @@ private:
         // TODO: Implement multiplication
 
         std::vector<std::uint8_t> result;
+        result.reserve(lhs.size() + rhs.size());    // Max size, e.g. 999 * 999 = 998001 -> 6 digits
+
+
         return result;
     }
 
