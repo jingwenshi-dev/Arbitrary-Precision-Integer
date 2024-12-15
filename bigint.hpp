@@ -221,15 +221,16 @@ public:
     }
 
     // Binary Operators
-    bigint operator+(bigint lhs, const bigint &rhs) const {
+    // Friend functions to allow using compound assignment operators as it will call private parameters.
+    friend bigint operator+(bigint lhs, const bigint &rhs) {
         return lhs += rhs;
     }
 
-    bigint operator-(bigint lhs, const bigint &rhs) const {
+    friend bigint operator-(bigint lhs, const bigint &rhs) {
         return lhs -= rhs;
     }
 
-    bigint operator*(bigint lhs, const bigint &rhs) const {
+    friend bigint operator*(bigint lhs, const bigint &rhs) {
         return lhs *= rhs;
     }
 };
