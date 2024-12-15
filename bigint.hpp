@@ -222,18 +222,15 @@ public:
 
     // Binary Operators
     bigint operator+(bigint lhs, const bigint &rhs) const {
-        lhs += rhs;
-        return lhs;
+        return lhs += rhs;
     }
 
     bigint operator-(bigint lhs, const bigint &rhs) const {
-        lhs -= rhs;
-        return lhs;
+        return lhs -= rhs;
     }
 
     bigint operator*(bigint lhs, const bigint &rhs) const {
-        lhs *= rhs;
-        return lhs;
+        return lhs *= rhs;
     }
 };
 
