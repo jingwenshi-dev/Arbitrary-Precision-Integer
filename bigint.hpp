@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <limits>
+#include <ranges>
 
 class bigint {
 private:
@@ -268,6 +269,17 @@ public:
 
     bool operator>=(const bigint &rhs) const {
         return !(*this < rhs);
+    }
+
+    // Insertion
+    // Reference: https://stackoverflow.com/questions/476272/how-can-i-properly-overload-the-operator-for-an-ostream
+    std::ostream &operator<<(std::ostream &stream, const bigint &num) const {
+        if (this->isNegative) stream << '-';
+
+        // Reference: https://stackoverflow.com/questions/3610933/iterating-c-vector-from-the-end-to-the-beginning
+        for (auto &digit: this->digits | std::views::reverse) stream << digit;
+
+        return stream;
     }
 };
 
