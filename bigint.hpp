@@ -233,6 +233,42 @@ public:
     friend bigint operator*(bigint lhs, const bigint &rhs) {
         return lhs *= rhs;
     }
+
+    // Comparison Operators
+    bool operator==(const bigint &rhs) const {
+        // Reference: https://learn.microsoft.com/en-us/cpp/cpp/equality-operators-equal-equal-and-exclpt-equal?view=msvc-170
+        // In c++, == compares the value of obj, not the address
+        return this->isNegative == rhs.isNegative && this->digits == rhs.digits;
+    }
+
+    bool operator!=(const bigint &rhs) const {
+        return !(*this == rhs);
+    }
+
+    bool operator<(const bigint &rhs) const {
+        if (this->isNegative && !rhs.isNegative) {
+            return true;
+        }
+        if (!this->isNegative && rhs.isNegative) {
+            return false;
+        }
+
+        if (this->isNegative) return !is_abs_less_than(this->digits, rhs.digits);
+        return is_abs_less_than(this->digits, rhs.digits);
+    }
+
+    bool operator<=(const bigint &rhs) const {
+        if (*this == rhs) return true;
+        return *this < rhs;
+    }
+
+    bool operator>(const bigint &rhs) const {
+        return !(*this <= rhs);
+    }
+
+    bool operator>=(const bigint &rhs) const {
+        return !(*this < rhs);
+    }
 };
 
 #endif
