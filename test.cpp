@@ -135,6 +135,12 @@ public:
         return -num == expected;
     }
 
+    static bool test_negation_zero() {
+        const bigint num(0);
+        const auto expected = bigint(0);
+        return -num == expected;
+    }
+
     static bool test_increment_prefix() {
         bigint num1(123);
         const bigint num2 = ++num1;
@@ -195,6 +201,7 @@ public:
         std::cout << "\nNegation Tests:\n";
         run_test("Test Negation Positive", test_negation_positive);
         run_test("Test Negation Negative", test_negation_negative);
+        run_test("Test Negation Zero", test_negation_zero);
 
         std::cout << "\nIncrement Tests:\n";
         run_test("Test Increment Prefix", test_increment_prefix);
