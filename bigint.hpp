@@ -299,7 +299,7 @@ public:
         if (num.isNegative) stream << '-';
 
         // Reference: https://stackoverflow.com/questions/3610933/iterating-c-vector-from-the-end-to-the-beginning
-        for (auto &digit: num.digits | std::views::reverse) stream << digit;
+        for (auto &digit: num.digits | std::views::reverse) stream << static_cast<char>(digit + '0');
 
         return stream;
     }

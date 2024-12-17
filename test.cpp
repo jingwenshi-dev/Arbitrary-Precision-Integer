@@ -1,6 +1,6 @@
 #include "bigint.hpp"
 #include <string>
-#include <functional>
+#include <sstream>
 
 class Test {
 private:
@@ -503,6 +503,26 @@ public:
         return num1 >= num2;
     }
 
+    static bool test_insertion_operator_positive() {
+        const bigint num(123);
+        std::ostringstream stream;
+        stream << num;
+        return stream.str() == "123";
+    }
+
+    static bool test_insertion_operator_negative() {
+        const bigint num(-123);
+        std::ostringstream stream;
+        stream << num;
+        return stream.str() == "-123";
+    }
+
+    static bool test_insertion_operator_zero() {
+        const bigint num(0);
+        std::ostringstream stream;
+        stream << num;
+        return stream.str() == "0";
+    }
 
     void run_all_tests() {
         std::cout << "\nRunning tests..." << std::endl;
@@ -586,7 +606,7 @@ public:
 
         std::cout << "\nBinary Operator Tests:" << std::endl;
         std::cout <<
-                "Note: Binary operators call the compound assignment operators, so they are only tested to check if values are returned correctly."
+                "Note: Binary operators call the compound assignment operators, so they only have one test case each to check if values are returned correctly."
                 << std::endl;
         run_test("Test Addition Operator Returns", test_addition_operator_return);
         run_test("Test Subtraction Operator Returns", test_subtraction_operator_return);
@@ -594,7 +614,7 @@ public:
 
         std::cout << "\nComparison Operator Tests:" << std::endl;
         std::cout <<
-                "Note: != depends on ==, > depends on <=, >= depends on <, so each of them only have 1 test case to check if values are returned correctly."
+                "Note: != depends on ==, > depends on <=, >= depends on <, so them only have 1 test case each to check if values are returned correctly."
                 "<= depends on < and ==, so it is tested separately for both cases."
                 "< is tested for all positive, all negative, and mixed cases as it is the base of all operators."
                 "== is not tested as it is the fundamental of all operators and is used in all tests."
@@ -607,6 +627,11 @@ public:
         run_test("Test Less Than Equal Operator Less Than", test_less_than_equal_operator_less_than);
         run_test("Test Greater Than Operator", test_greater_than_operator);
         run_test("Test Greater Than Equal Operator", test_greater_than_equal_operator);
+
+        std::cout << "Insertion Operator Tests:" << std::endl;
+        run_test("Test Insertion Operator Positive", test_insertion_operator_positive);
+        run_test("Test Insertion Operator Negative", test_insertion_operator_negative);
+        run_test("Test Insertion Operator Zero", test_insertion_operator_zero);
 
         std::cout << "\nTest Results:" << std::endl;
         std::cout << "Passed: " << passed << std::endl;
