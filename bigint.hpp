@@ -206,7 +206,11 @@ public:
     bigint &operator+=(const bigint &rhs) {
         // Add abs values if signs are the same
         if (this->isNegative == rhs.isNegative) {
-            this->digits = add_abs(this->digits, rhs.digits);
+            if (this->digits.size() > rhs.digits.size()) {
+                this->digits = add_abs(this->digits, rhs.digits);
+            } else {
+                this->digits = add_abs(rhs.digits, this->digits);
+            }
         } else {
             if (is_abs_less_than(this->digits, rhs.digits)) {
                 // Since two nums are different signs, order of subtraction does not matter but we need to follow the sign of the larger number

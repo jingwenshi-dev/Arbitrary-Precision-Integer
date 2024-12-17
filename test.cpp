@@ -203,6 +203,22 @@ public:
         return num1 == expected;
     }
 
+    static bool test_addition_assignment_zero_add_positive() {
+        bigint num1(0);
+        const bigint num2(123);
+        num1 += num2;
+        const auto expected = bigint(123);
+        return num1 == expected;
+    }
+
+    static bool test_addition_assignment_zero_add_negative() {
+        bigint num1(0);
+        const bigint num2(-123);
+        num1 += num2;
+        const auto expected = bigint(-123);
+        return num1 == expected;
+    }
+
     static bool test_addition_assignment_sum_zero_positive() {
         bigint num1(+123);
         const bigint num2(-123);
@@ -237,13 +253,115 @@ public:
         return num1 == expected;
     }
 
-    static bool test_addition_assignment_min_min_add_max() {
+    static bool test_addition_assignment_min_add_max() {
         constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
         constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
         bigint num1(min_int64);
         const bigint num2(max_int64);
         num1 += num2;
         const auto expected = bigint("-1");
+        return num1 == expected;
+    }
+
+    static bool test_addition_assignment_max_add_min() {
+        constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
+        constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
+        bigint num1(max_int64);
+        const bigint num2(min_int64);
+        num1 += num2;
+        const auto expected = bigint("-1");
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_assignment_positive_big_minus_small() {
+        bigint num1(456);
+        const bigint num2(123);
+        num1 -= num2;
+        const auto expected = bigint(456 - 123);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_assignment_positive_small_minus_big() {
+        bigint num1(123);
+        const bigint num2(456);
+        num1 -= num2;
+        const auto expected = bigint(123 - 456);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_assignment_negative_big_minus_small() {
+        bigint num1(-123);
+        const bigint num2(-456);
+        num1 -= num2;
+        const auto expected = bigint(-123 + 456);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_assignment_negative_small_minus_big() {
+        bigint num1(-456);
+        const bigint num2(-123);
+        num1 -= num2;
+        const auto expected = bigint(-456 + 123);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_mixed_big_minus_small() {
+        bigint num1(456);
+        const bigint num2(-123);
+        num1 -= num2;
+        const auto expected = bigint(456 + 123);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_mixed_small_minus_big() {
+        bigint num1(-123);
+        const bigint num2(456);
+        num1 -= num2;
+        const auto expected = bigint(-123 - 456);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_diff_zero() {
+        bigint num1(123);
+        const bigint num2(123);
+        num1 -= num2;
+        const auto expected = bigint(0);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_zero_minus_positive() {
+        bigint num1(0);
+        const bigint num2(123);
+        num1 -= num2;
+        const auto expected = bigint(-123);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_zero_minus_negative() {
+        bigint num1(0);
+        const bigint num2(-123);
+        num1 -= num2;
+        const auto expected = bigint(123);
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_max_minus_min() {
+        constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
+        constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
+        bigint num1(max_int64);
+        const bigint num2(min_int64);
+        num1 -= num2;
+        const auto expected = bigint("18446744073709551615");
+        return num1 == expected;
+    }
+
+    static bool test_subtraction_min_minus_max() {
+        constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
+        constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
+        bigint num1(min_int64);
+        const bigint num2(max_int64);
+        num1 -= num2;
+        const auto expected = bigint("-18446744073709551615");
         return num1 == expected;
     }
 
@@ -286,18 +404,38 @@ public:
         run_test("Test Decrement Prefix", test_decrement_prefix);
         run_test("Test Decrement Postfix", test_decrement_postfix);
 
-        std::cout << "\nCompound Assignment Operators Tests:" << std::endl;
+        std::cout << "\nAddition Assignment Operator Tests:" << std::endl;
         run_test("Test Addition Assignment Positive + Positive", test_addition_assignment_all_positive);
         run_test("Test Addition Assignment Negative + Negative", test_addition_assignment_all_negative);
         run_test("Test Addition Assignment Positive + Negative", test_addition_assignment_positive_add_negative);
         run_test("Test Addition Assignment Negative + Positive", test_addition_assignment_negative_add_positive);
+        run_test("Test Addition Assignment Zero + Positive", test_addition_assignment_zero_add_positive);
+        run_test("Test Addition Assignment Zero + Negative", test_addition_assignment_zero_add_negative);
         run_test("Test Addition Assignment Sum Zero with Positive + Negative",
                  test_addition_assignment_sum_zero_positive);
         run_test("Test Addition Assignment Sum Zero with Negative + Positive",
                  test_addition_assignment_sum_zero_negative);
         run_test("Test Addition Assignment with Max Int64", test_addition_assignment_max);
         run_test("Test Addition Assignment with Min Int64", test_addition_assignment_min);
-        run_test("Test Addition Assignment with Min Int64 + Max Int64", test_addition_assignment_min_min_add_max);
+        run_test("Test Addition Assignment with Min Int64 + Max Int64", test_addition_assignment_min_add_max);
+        run_test("Test Addition Assignment with Max Int64 + Min Int64", test_addition_assignment_max_add_min);
+
+        std::cout << "\nSubtraction Assignment Operator Tests:" << std::endl;
+        run_test("Test Subtraction Assignment Positive Big - Small",
+                 test_subtraction_assignment_positive_big_minus_small);
+        run_test("Test Subtraction Assignment Positive Small - Big",
+                 test_subtraction_assignment_positive_small_minus_big);
+        run_test("Test Subtraction Assignment Negative Big - Small",
+                 test_subtraction_assignment_negative_big_minus_small);
+        run_test("Test Subtraction Assignment Negative Small - Big",
+                 test_subtraction_assignment_negative_small_minus_big);
+        run_test("Test Subtraction Assignment Mixed Big - Small", test_subtraction_mixed_big_minus_small);
+        run_test("Test Subtraction Assignment Mixed Small - Big", test_subtraction_mixed_small_minus_big);
+        run_test("Test Subtraction Assignment with Difference Zero", test_subtraction_diff_zero);
+        run_test("Test Subtraction Assignment with Zero - Positive", test_subtraction_zero_minus_positive);
+        run_test("Test Subtraction Assignment with Zero - Negative", test_subtraction_zero_minus_negative);
+        run_test("Test Subtraction Assignment with Max Int64 - Min Int64", test_subtraction_max_minus_min);
+        run_test("Test Subtraction Assignment with Min Int64 - Max Int 64", test_subtraction_min_minus_max);
 
         std::cout << "\nTest Results:\n" << std::endl;
         std::cout << "Passed: " << passed << "/" << total << std::endl;
