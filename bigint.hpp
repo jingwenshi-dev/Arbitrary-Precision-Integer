@@ -219,6 +219,10 @@ public:
                 this->digits = subtract_abs(this->digits, rhs.digits);
             }
         }
+
+        remove_leading_zeros(this->digits);
+        if (is_abs_zero(this->digits)) this->isNegative = false;
+
         return *this;
     }
 
