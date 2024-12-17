@@ -18,21 +18,20 @@ private:
         size_t start = 0;
 
         if (str[0] == '-' || str[0] == '+') {
-            if (str.size() == 1) throw std::invalid_argument("Invalid number");
+            if (str.size() == 1) throw std::invalid_argument("Error: String contains only a sign char.");
             start = 1;
         }
 
         for (size_t i = str.length(); i > start; i--) {
             if (!std::isdigit(str[i - 1])) {
-                throw std::invalid_argument("Invalid number");
+                throw std::invalid_argument("Error: String contains non-digit char.");
             }
             // Reference: https://stackoverflow.com/questions/5029840/convert-char-to-int-in-c-and-c
             digits.push_back(static_cast<std::uint8_t>(str[i - 1] - '0'));
         }
 
-        if (is_zero(this->digits)) {
-            isNegative = false;
-        }
+        // Handle negative zero
+        if (is_zero(this->digits)) isNegative = false;
     }
 
     static bool is_abs_less_than(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
