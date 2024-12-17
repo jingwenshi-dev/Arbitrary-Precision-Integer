@@ -219,6 +219,24 @@ public:
         return num1 == expected;
     }
 
+    static bool test_addition_assignment_max() {
+        constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
+        bigint num1(max_int64);
+        const bigint num2(max_int64);
+        num1 += num2;
+        const auto expected = bigint("18446744073709551614");
+        return num1 == expected;
+    }
+
+    static bool test_addition_assignment_min() {
+        const std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
+        bigint num1(min_int64);
+        bigint num2(min_int64);
+        num1 += num2;
+        const auto expected = bigint("-18446744073709551616");
+        return num1 == expected;
+    }
+
     void run_all_tests() {
         std::cout <<
                 "\nNote: String constructor and == are not explicitly tested as they are always used as part of the other tests as the base."
@@ -226,7 +244,7 @@ public:
                 "\nRunning tests..."
                 << std::endl;
 
-        std::cout << "\nConstructor Tests:\n" << std::endl;
+        std::cout << "\nConstructor Tests:" << std::endl;
         run_test("Test Default Constructor Equal to Int64 Constructor", test_default_constructor_equal_to_zero_int);
         run_test("Test Default Constructor Equal to String Constructor", test_default_constructor_equal_to_zero_string);
         run_test("Test Int64 Constructor Equal to String Constructor Positive",
@@ -245,26 +263,30 @@ public:
         run_test("Test String Constructor with Positive Sign Only", test_string_positive_sign_only);
         run_test("Test String Constructor with Negative Sign Only", test_string_negative_sign_only);
 
-        std::cout << "\nNegation Tests:\n" << std::endl;
+        std::cout << "\nNegation Tests:" << std::endl;
         run_test("Test Negation Positive", test_negation_positive);
         run_test("Test Negation Negative", test_negation_negative);
         run_test("Test Negation Zero", test_negation_zero);
 
-        std::cout << "\nIncrement Tests:\n" << std::endl;
+        std::cout << "\nIncrement Tests:" << std::endl;
         run_test("Test Increment Prefix", test_increment_prefix);
         run_test("Test Increment Postfix", test_increment_postfix);
 
-        std::cout << "\nDecrement Tests:\n" << std::endl;
+        std::cout << "\nDecrement Tests:" << std::endl;
         run_test("Test Decrement Prefix", test_decrement_prefix);
         run_test("Test Decrement Postfix", test_decrement_postfix);
 
-        std::cout << "Compound Assignment Operators Tests:\n" << std::endl;
+        std::cout << "\nCompound Assignment Operators Tests:" << std::endl;
         run_test("Test Addition Assignment Positive + Positive", test_addition_assignment_all_positive);
         run_test("Test Addition Assignment Negative + Negative", test_addition_assignment_all_negative);
         run_test("Test Addition Assignment Positive + Negative", test_addition_assignment_positive_add_negative);
         run_test("Test Addition Assignment Negative + Positive", test_addition_assignment_negative_add_positive);
-        run_test("Test Addition Assignment Sum Zero with Positive Num", test_addition_assignment_sum_zero_positive);
-        run_test("Test Addition Assignment Sum Zero with Negative Num", test_addition_assignment_sum_zero_negative);
+        run_test("Test Addition Assignment Sum Zero with Positive + Negative",
+                 test_addition_assignment_sum_zero_positive);
+        run_test("Test Addition Assignment Sum Zero with Negative + Positive",
+                 test_addition_assignment_sum_zero_negative);
+        run_test("Test Addition Assignment with Max Int64", test_addition_assignment_max);
+        run_test("Test Addition Assignment with Min Int64", test_addition_assignment_min);
 
         std::cout << "\nTest Results:\n" << std::endl;
         std::cout << "Passed: " << passed << "/" << total << std::endl;
