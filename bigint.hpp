@@ -131,6 +131,7 @@ public:
         // Reference: https://stackoverflow.com/questions/16033201/smallest-values-for-int8-t-and-int64-t
         if (num == std::numeric_limits<std::int64_t>::min()) {
             str_to_bigint(std::to_string(num));
+            return;
         }
 
         num = std::abs(num);
