@@ -22,12 +22,12 @@ private:
             start = 1;
         }
 
-        for (size_t i = start; i < str.length(); i++) {
-            if (!std::isdigit(str[i])) {
+        for (size_t i = str.length(); i > start; i--) {
+            if (!std::isdigit(str[i - 1])) {
                 throw std::invalid_argument("Invalid number");
             }
             // Reference: https://stackoverflow.com/questions/5029840/convert-char-to-int-in-c-and-c
-            digits.push_back(static_cast<std::uint8_t>(str[i] - '0'));
+            digits.push_back(static_cast<std::uint8_t>(str[i - 1] - '0'));
         }
     }
 
@@ -119,7 +119,7 @@ private:
 
 public:
     // Constructors
-    bigint() {
+    explicit bigint() {
         isNegative = false;
         digits.push_back(0);
     }
