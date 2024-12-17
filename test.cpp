@@ -100,7 +100,7 @@ public:
     }
 
     static bool test_string_long_zero() {
-        const bigint num("000000000");
+        const bigint num("-000000000");
         const auto expected = bigint(0);
         return num == expected;
     }
@@ -179,7 +179,7 @@ public:
                 "\nRunning tests..."
                 << std::endl;
 
-        std::cout << "\nConstructor Tests:\n";
+        std::cout << "\nConstructor Tests:\n" << std::endl;
         run_test("Test Default Constructor Equal to Int64 Constructor", test_default_constructor_equal_to_zero_int);
         run_test("Test Default Constructor Equal to String Constructor", test_default_constructor_equal_to_zero_string);
         run_test("Test Int64 Constructor Equal to String Constructor Positive",
@@ -198,20 +198,22 @@ public:
         run_test("Test String Constructor with Positive Sign Only", test_string_positive_sign_only);
         run_test("Test String Constructor with Negative Sign Only", test_string_negative_sign_only);
 
-        std::cout << "\nNegation Tests:\n";
+        std::cout << "\nNegation Tests:\n" << std::endl;
         run_test("Test Negation Positive", test_negation_positive);
         run_test("Test Negation Negative", test_negation_negative);
         run_test("Test Negation Zero", test_negation_zero);
 
-        std::cout << "\nIncrement Tests:\n";
+        std::cout << "\nIncrement Tests:\n" << std::endl;
         run_test("Test Increment Prefix", test_increment_prefix);
         run_test("Test Increment Postfix", test_increment_postfix);
 
-        std::cout << "\nDecrement Tests:\n";
+        std::cout << "\nDecrement Tests:\n" << std::endl;
         run_test("Test Decrement Prefix", test_decrement_prefix);
         run_test("Test Decrement Postfix", test_decrement_postfix);
 
-        std::cout << "\nTest Results:\n";
+        std::cout << "Compound Assignment Operators Tests:\n" << std::endl;
+
+        std::cout << "\nTest Results:\n" << std::endl;
         std::cout << "Passed: " << passed << "/" << total << std::endl;
     }
 };

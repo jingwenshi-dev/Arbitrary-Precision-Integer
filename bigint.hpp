@@ -37,8 +37,8 @@ private:
         }
 
         // Handle negative zero
-        if (is_zero(this->digits)) isNegative = false;
         remove_leading_zeros(this->digits);
+        if (is_abs_zero(this->digits)) isNegative = false;
     }
 
     static bool is_abs_less_than(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
@@ -51,7 +51,7 @@ private:
         return false;
     }
 
-    static bool is_zero(const std::vector<std::uint8_t> &num) {
+    static bool is_abs_zero(const std::vector<std::uint8_t> &num) {
         return num.size() == 1 && num[0] == 0;
     }
 
@@ -103,7 +103,7 @@ private:
 
     static std::vector<std::uint8_t> multiply_abs(const std::vector<std::uint8_t> &lhs,
                                                   const std::vector<std::uint8_t> &rhs) {
-        if (is_zero(lhs) || is_zero(rhs)) return {0};
+        if (is_abs_zero(lhs) || is_abs_zero(rhs)) return {0};
 
         std::vector<std::uint8_t> result;
         result.resize(lhs.size() + rhs.size()); // Max size, e.g. 999 * 999 = 998001 -> 6 digits
