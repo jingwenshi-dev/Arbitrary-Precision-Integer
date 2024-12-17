@@ -229,11 +229,21 @@ public:
     }
 
     static bool test_addition_assignment_min() {
-        const std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
+        constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
         bigint num1(min_int64);
-        bigint num2(min_int64);
+        const bigint num2(min_int64);
         num1 += num2;
         const auto expected = bigint("-18446744073709551616");
+        return num1 == expected;
+    }
+
+    static bool test_addition_assignment_min_min_add_max() {
+        constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
+        constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
+        bigint num1(min_int64);
+        const bigint num2(max_int64);
+        num1 += num2;
+        const auto expected = bigint("-1");
         return num1 == expected;
     }
 
@@ -287,6 +297,7 @@ public:
                  test_addition_assignment_sum_zero_negative);
         run_test("Test Addition Assignment with Max Int64", test_addition_assignment_max);
         run_test("Test Addition Assignment with Min Int64", test_addition_assignment_min);
+        run_test("Test Addition Assignment with Min Int64 + Max Int64", test_addition_assignment_min_min_add_max);
 
         std::cout << "\nTest Results:\n" << std::endl;
         std::cout << "Passed: " << passed << "/" << total << std::endl;
