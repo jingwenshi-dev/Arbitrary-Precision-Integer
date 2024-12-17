@@ -238,6 +238,7 @@ public:
     bigint &operator*=(const bigint &rhs) {
         this->isNegative = this->isNegative != rhs.isNegative;
         this->digits = multiply_abs(this->digits, rhs.digits);
+        remove_leading_zeros(this->digits);
         return *this;
     }
 

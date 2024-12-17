@@ -365,6 +365,54 @@ public:
         return num1 == expected;
     }
 
+    static bool test_multiplication_assignment_all_positive() {
+        bigint num1(123);
+        const bigint num2(456);
+        num1 *= num2;
+        const auto expected = bigint(123 * 456);
+        return num1 == expected;
+    }
+
+    static bool test_multiplication_assignment_all_negative() {
+        bigint num1(-123);
+        const bigint num2(-456);
+        num1 *= num2;
+        const auto expected = bigint(-123 * -456);
+        return num1 == expected;
+    }
+
+    static bool test_multiplication_assignment_positive_negative() {
+        bigint num1(123);
+        const bigint num2(-456);
+        num1 *= num2;
+        const auto expected = bigint(123 * -456);
+        return num1 == expected;
+    }
+
+    static bool test_multiplication_assignment_negative_positive() {
+        bigint num1(-123);
+        const bigint num2(456);
+        num1 *= num2;
+        const auto expected = bigint(-123 * 456);
+        return num1 == expected;
+    }
+
+    static bool test_multiplication_assignment_zero_positive() {
+        bigint num1(0);
+        const bigint num2(123);
+        num1 *= num2;
+        const auto expected = bigint(0);
+        return num1 == expected;
+    }
+
+    static bool test_multiplication_assignment_zero_negative() {
+        bigint num1(0);
+        const bigint num2(-123);
+        num1 *= num2;
+        const auto expected = bigint(0);
+        return num1 == expected;
+    }
+
     void run_all_tests() {
         std::cout <<
                 "\nNote: String constructor and == are not explicitly tested as they are always used as part of the other tests as the base."
@@ -436,6 +484,17 @@ public:
         run_test("Test Subtraction Assignment with Zero - Negative", test_subtraction_zero_minus_negative);
         run_test("Test Subtraction Assignment with Max Int64 - Min Int64", test_subtraction_max_minus_min);
         run_test("Test Subtraction Assignment with Min Int64 - Max Int 64", test_subtraction_min_minus_max);
+
+        std::cout << "\nMultiplication Assignment Operator Tests:" << std::endl;
+        run_test("Test Multiplication Assignment Positive * Positive", test_multiplication_assignment_all_positive);
+        run_test("Test Multiplication Assignment Negative * Negative", test_multiplication_assignment_all_negative);
+        run_test("Test Multiplication Assignment Positive * Negative",
+                 test_multiplication_assignment_positive_negative);
+        run_test("Test Multiplication Assignment Negative * Positive",
+                 test_multiplication_assignment_negative_positive);
+        run_test("Test Multiplication Assignment Zero * Positive", test_multiplication_assignment_zero_positive);
+        run_test("Test Multiplication Assignment Zero * Negative", test_multiplication_assignment_zero_negative);
+
 
         std::cout << "\nTest Results:\n" << std::endl;
         std::cout << "Passed: " << passed << "/" << total << std::endl;
