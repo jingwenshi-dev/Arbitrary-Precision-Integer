@@ -413,6 +413,48 @@ public:
         return num1 == expected;
     }
 
+    static bool test_multiplication_assignment_max() {
+        constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
+        bigint num1(max_int64);
+        const bigint num2(max_int64);
+        num1 *= num2;
+        const auto expected = bigint("85070591730234615847396907784232501249");
+        return num1 == expected;
+    }
+
+    static bool test_multiplication_assignment_min() {
+        constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
+        bigint num1(min_int64);
+        const bigint num2(min_int64);
+        num1 *= num2;
+        const auto expected = bigint("85070591730234615865843651857942052864");
+        return num1 == expected;
+    }
+
+    static bool test_addition_operator_return() {
+        const bigint num1(123);
+        const bigint num2(456);
+        const auto result = num1 + num2;
+        const auto expected = bigint(123 + 456);
+        return result == expected;
+    }
+
+    static bool test_subtraction_operator_return() {
+        const bigint num1(456);
+        const bigint num2(123);
+        const auto result = num1 - num2;
+        const auto expected = bigint(456 - 123);
+        return result == expected;
+    }
+
+    static bool test_multiplication_operator_return() {
+        const bigint num1(123);
+        const bigint num2(456);
+        const auto result = num1 * num2;
+        const auto expected = bigint(123 * 456);
+        return result == expected;
+    }
+
     void run_all_tests() {
         std::cout <<
                 "\nNote: String constructor and == are not explicitly tested as they are always used as part of the other tests as the base."
@@ -494,6 +536,16 @@ public:
                  test_multiplication_assignment_negative_positive);
         run_test("Test Multiplication Assignment Zero * Positive", test_multiplication_assignment_zero_positive);
         run_test("Test Multiplication Assignment Zero * Negative", test_multiplication_assignment_zero_negative);
+        run_test("Test Multiplication Assignment with Max Int64", test_multiplication_assignment_max);
+        run_test("Test Multiplication Assignment with Min Int64", test_multiplication_assignment_min);
+
+        std::cout << "Binary Operator Tests:" << std::endl;
+        std::cout <<
+                "Note: Binary operators call the compound assignment operators, so they are only tested to check if values are returned correctly."
+                << std::endl;
+        run_test("Test Addition Operator Returns", test_addition_operator_return);
+        run_test("Test Subtraction Operator Returns", test_subtraction_operator_return);
+        run_test("Test Multiplication Operator Returns", test_multiplication_operator_return);
 
 
         std::cout << "\nTest Results:\n" << std::endl;
