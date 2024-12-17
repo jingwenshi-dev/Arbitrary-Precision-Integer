@@ -63,6 +63,48 @@ public:
         return num == expected;
     }
 
+    static bool test_string_constructor_empty() {
+        try {
+            bigint num("");
+            return false;
+        } catch (const std::invalid_argument &) {
+            return true;
+        }
+    }
+
+    static bool test_string_constructor_invalid() {
+        try {
+            bigint num("-123abc12");
+            return false;
+        } catch (const std::invalid_argument &) {
+            return true;
+        }
+    }
+
+    static bool test_string_negative_zero() {
+        const bigint num("-0");
+        const auto expected = bigint(0);
+        return num == expected;
+    }
+
+    static bool test_string_positive_sign_only() {
+        try {
+            const bigint num("+");
+            return false;
+        } catch (const std::invalid_argument &) {
+            return true;
+        }
+    }
+
+    static bool test_string_negative_sign_only() {
+        try {
+            const bigint num("-");
+            return false;
+        } catch (const std::invalid_argument &) {
+            return true;
+        }
+    }
+
     static bool test_negation_positive() {
         const bigint num(123);
         const auto expected = bigint(-123);
@@ -76,19 +118,35 @@ public:
     }
 
     static bool test_increment_prefix() {
-        bigint num(123);
-        ++num;
+        bigint num1(123);
+        const bigint num2 = ++num1;
         const auto expected = bigint(124);
-        return num == expected;
+        return num1 == expected && num2 == expected;
     }
 
     static bool test_increment_postfix() {
-        bigint num(123);
-        const auto expected_before = bigint(123);
-        const auto num_incremented = num++;
-        const auto expected_after = bigint(124);
-        return num_incremented == expected_before && num == expected_after;
+        bigint num1(123);
+        const bigint num2 = num1++;
+        const auto expected_original = bigint(123);
+        const auto expected_incremented = bigint(124);
+        return num1 == expected_incremented && num2 == expected_original;
     }
+
+    static bool test_decrement_prefix() {
+        bigint num1(123);
+        const bigint num2 = --num1;
+        const auto expected = bigint(122);
+        return num1 == expected && num2 == expected;
+    }
+
+    static bool test_decrement_postfix() {
+        bigint num1(123);
+        const bigint num2 = num1--;
+        const auto expected_original = bigint(123);
+        const auto expected_decremented = bigint(122);
+        return num1 == expected_decremented && num2 == expected_original;
+    }
+
 
     void run_all_tests() {
         std::cout <<
@@ -106,6 +164,12 @@ public:
                  test_int64_constructor_equal_to_str_negative);
         run_test("Test Int64 Constructor with Max Value", test_int64_constructor_max);
         run_test("Test Int64 Constructor with Min Value", test_int64_constructor_min);
+        run_test("Test String Constructor with Invalid String", test_string_constructor_invalid);
+        run_test("Test String Constructor with Empty String", test_string_constructor_empty);
+        run_test("Test String Constructor with Invalid String", test_string_constructor_invalid);
+        run_test("Test String Constructor with Negative Zero", test_string_negative_zero);
+        run_test("Test String Constructor with Positive Sign Only", test_string_positive_sign_only);
+        run_test("Test String Constructor with Negative Sign Only", test_string_negative_sign_only);
 
         std::cout << "\nNegation Tests:\n";
         run_test("Test Negation Positive", test_negation_positive);
@@ -114,6 +178,10 @@ public:
         std::cout << "\nIncrement Tests:\n";
         run_test("Test Increment Prefix", test_increment_prefix);
         run_test("Test Increment Postfix", test_increment_postfix);
+
+        std::cout << "\nDecrement Tests:\n";
+        run_test("Test Decrement Prefix", test_decrement_prefix);
+        run_test("Test Decrement Postfix", test_decrement_postfix);
 
         std::cout << "\nTest Results:\n";
         std::cout << "Passed: " << passed << "/" << total << std::endl;

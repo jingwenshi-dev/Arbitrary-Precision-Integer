@@ -29,6 +29,10 @@ private:
             // Reference: https://stackoverflow.com/questions/5029840/convert-char-to-int-in-c-and-c
             digits.push_back(static_cast<std::uint8_t>(str[i - 1] - '0'));
         }
+
+        if (is_zero(this->digits)) {
+            isNegative = false;
+        }
     }
 
     static bool is_abs_less_than(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
