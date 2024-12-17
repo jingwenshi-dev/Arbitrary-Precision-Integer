@@ -455,12 +455,57 @@ public:
         return result == expected;
     }
 
+    static bool test_inequality_operator() {
+        const bigint num1(123);
+        const bigint num2(456);
+        return num1 != num2;
+    }
+
+    static bool test_less_than_operator_all_positive() {
+        const bigint num1(123);
+        const bigint num2(456);
+        return num1 < num2;
+    }
+
+    static bool test_less_than_operator_all_negative() {
+        const bigint num1(-456);
+        const bigint num2(-123);
+        return num1 < num2;
+    }
+
+    static bool test_less_than_operator_mixed() {
+        const bigint num1(-123);
+        const bigint num2(123);
+        return num1 < num2;
+    }
+
+    static bool test_less_than_equal_operator_equal() {
+        const bigint num1(123);
+        const bigint num2(123);
+        return num1 <= num2;
+    }
+
+    static bool test_less_than_equal_operator_less_than() {
+        const bigint num1(-456);
+        const bigint num2(0);
+        return num1 <= num2;
+    }
+
+    static bool test_greater_than_operator() {
+        const bigint num1(123);
+        const bigint num2(0);
+        return num1 > num2;
+    }
+
+    static bool test_greater_than_equal_operator() {
+        const bigint num1(123);
+        const bigint num2(123);
+        return num1 >= num2;
+    }
+
+
     void run_all_tests() {
-        std::cout <<
-                "\nNote: String constructor and == are not explicitly tested as they are always used as part of the other tests as the base."
-                "\nFor more detailed reason, please refer to the README.md file.\n"
-                "\nRunning tests..."
-                << std::endl;
+        std::cout << "\nRunning tests..." << std::endl;
 
         std::cout << "\nConstructor Tests:" << std::endl;
         run_test("Test Default Constructor Equal to Int64 Constructor", test_default_constructor_equal_to_zero_int);
@@ -539,7 +584,7 @@ public:
         run_test("Test Multiplication Assignment with Max Int64", test_multiplication_assignment_max);
         run_test("Test Multiplication Assignment with Min Int64", test_multiplication_assignment_min);
 
-        std::cout << "Binary Operator Tests:" << std::endl;
+        std::cout << "\nBinary Operator Tests:" << std::endl;
         std::cout <<
                 "Note: Binary operators call the compound assignment operators, so they are only tested to check if values are returned correctly."
                 << std::endl;
@@ -547,9 +592,26 @@ public:
         run_test("Test Subtraction Operator Returns", test_subtraction_operator_return);
         run_test("Test Multiplication Operator Returns", test_multiplication_operator_return);
 
+        std::cout << "\nComparison Operator Tests:" << std::endl;
+        std::cout <<
+                "Note: != depends on ==, > depends on <=, >= depends on <, so each of them only have 1 test case to check if values are returned correctly."
+                "<= depends on < and ==, so it is tested separately for both cases."
+                "< is tested for all positive, all negative, and mixed cases as it is the base of all operators."
+                "== is not tested as it is the fundamental of all operators and is used in all tests."
+                << std::endl;
+        run_test("Test Inequality Operator", test_inequality_operator);
+        run_test("Test Less Than Operator All Positive", test_less_than_operator_all_positive);
+        run_test("Test Less Than Operator All Negative", test_less_than_operator_all_negative);
+        run_test("Test Less Than Operator Mixed", test_less_than_operator_mixed);
+        run_test("Test Less Than Equal Operator Equal", test_less_than_equal_operator_equal);
+        run_test("Test Less Than Equal Operator Less Than", test_less_than_equal_operator_less_than);
+        run_test("Test Greater Than Operator", test_greater_than_operator);
+        run_test("Test Greater Than Equal Operator", test_greater_than_equal_operator);
 
-        std::cout << "\nTest Results:\n" << std::endl;
-        std::cout << "Passed: " << passed << "/" << total << std::endl;
+        std::cout << "\nTest Results:" << std::endl;
+        std::cout << "Passed: " << passed << std::endl;
+        std::cout << "Failed: " << total - passed << std::endl;
+        std::cout << "Total: " << passed << "/" << total << std::endl;
     }
 };
 
