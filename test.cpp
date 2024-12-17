@@ -171,7 +171,7 @@ public:
         return num1 == expected_decremented && num2 == expected_original;
     }
 
-    static bool test_addition_assignment_positive() {
+    static bool test_addition_assignment_all_positive() {
         bigint num1(123);
         const bigint num2(456);
         num1 += num2;
@@ -179,11 +179,27 @@ public:
         return num1 == expected;
     }
 
-    static bool test_addition_assignment_negative() {
+    static bool test_addition_assignment_all_negative() {
         bigint num1(-123);
         const bigint num2(-456);
         num1 += num2;
         const auto expected = bigint(-123 - 456);
+        return num1 == expected;
+    }
+
+    static bool test_addition_assignment_positive_add_negative() {
+        bigint num1(123);
+        const bigint num2(-456);
+        num1 += num2;
+        const auto expected = bigint(123 - 456);
+        return num1 == expected;
+    }
+
+    static bool test_addition_assignment_negative_add_positive() {
+        bigint num1(-123);
+        const bigint num2(456);
+        num1 += num2;
+        const auto expected = bigint(-123 + 456);
         return num1 == expected;
     }
 
@@ -243,8 +259,10 @@ public:
         run_test("Test Decrement Postfix", test_decrement_postfix);
 
         std::cout << "Compound Assignment Operators Tests:\n" << std::endl;
-        run_test("Test Addition Assignment Positive", test_addition_assignment_positive);
-        run_test("Test Addition Assignment Negative", test_addition_assignment_negative);
+        run_test("Test Addition Assignment Positive + Positive", test_addition_assignment_all_positive);
+        run_test("Test Addition Assignment Negative + Negative", test_addition_assignment_all_negative);
+        run_test("Test Addition Assignment Positive + Negative", test_addition_assignment_positive_add_negative);
+        run_test("Test Addition Assignment Negative + Positive", test_addition_assignment_negative_add_positive);
         run_test("Test Addition Assignment Sum Zero with Positive Num", test_addition_assignment_sum_zero_positive);
         run_test("Test Addition Assignment Sum Zero with Negative Num", test_addition_assignment_sum_zero_negative);
 
