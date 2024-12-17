@@ -48,7 +48,8 @@ private:
     static std::vector<std::uint8_t>
     add_abs(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
         std::vector<std::uint8_t> result;
-        result.reserve(std::max(lhs.size(), rhs.size()) + 1); // Max size, e.g. 999 + 999 = 1998 -> 4 digits
+        result.resize(std::max(lhs.size(), rhs.size()));
+        result.reserve(result.size() + 1); // Max size, e.g. 999 + 999 = 1998 -> 4 digits
 
         std::uint8_t carry = 0;
 

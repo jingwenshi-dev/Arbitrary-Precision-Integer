@@ -25,35 +25,69 @@ private:
 public:
     static bool test_default_constructor_equal_to_zero_int() {
         const bigint num;
-        const auto ans = bigint(0);
-        return num == ans;
+        const auto expected = bigint(0);
+        return num == expected;
     }
 
     static bool test_default_constructor_equal_to_zero_string() {
         const bigint num;
-        const auto ans = bigint("0");
-        return num == ans;
+        const auto expected = bigint("0");
+        return num == expected;
     }
 
     static bool test_int64_constructor_equal_to_str_positive() {
         constexpr std::int64_t val = 123;
         const bigint num(val);
-        const auto ans = bigint("123");
-        return num == ans;
+        const auto expected = bigint("123");
+        return num == expected;
     }
 
     static bool test_int64_constructor_equal_to_str_negative() {
         constexpr std::int64_t val = -123;
         const bigint num(val);
-        const auto ans = bigint("-123");
-        return num == ans;
+        const auto expected = bigint("-123");
+        return num == expected;
+    }
+
+    static bool test_int64_constructor_max() {
+        constexpr std::int64_t val = std::numeric_limits<std::int64_t>::max();
+        const bigint num(val);
+        const auto expected = bigint(std::to_string(val));
+        return num == expected;
     }
 
     static bool test_int64_constructor_min() {
         constexpr std::int64_t val = std::numeric_limits<std::int64_t>::min();
         const bigint num(val);
-        const auto ans = bigint(std::to_string(val));
-        return num == ans;
+        const auto expected = bigint(std::to_string(val));
+        return num == expected;
+    }
+
+    static bool test_negation_positive() {
+        const bigint num(123);
+        const auto expected = bigint(-123);
+        return -num == expected;
+    }
+
+    static bool test_negation_negative() {
+        const bigint num(-123);
+        const auto expected = bigint(123);
+        return -num == expected;
+    }
+
+    static bool test_increment_prefix() {
+        bigint num(123);
+        ++num;
+        const auto expected = bigint(124);
+        return num == expected;
+    }
+
+    static bool test_increment_postfix() {
+        bigint num(123);
+        const auto expected_before = bigint(123);
+        const auto num_incremented = num++;
+        const auto expected_after = bigint(124);
+        return num_incremented == expected_before && num == expected_after;
     }
 
     void run_all_tests() {
@@ -63,14 +97,23 @@ public:
                 "\nRunning tests..."
                 << std::endl;
 
+        std::cout << "\nConstructor Tests:\n";
         run_test("Test Default Constructor Equal to Int64 Constructor", test_default_constructor_equal_to_zero_int);
         run_test("Test Default Constructor Equal to String Constructor", test_default_constructor_equal_to_zero_string);
         run_test("Test Int64 Constructor Equal to String Constructor Positive",
                  test_int64_constructor_equal_to_str_positive);
         run_test("Test Int64 Constructor Equal to String Constructor Negative",
                  test_int64_constructor_equal_to_str_negative);
+        run_test("Test Int64 Constructor with Max Value", test_int64_constructor_max);
         run_test("Test Int64 Constructor with Min Value", test_int64_constructor_min);
 
+        std::cout << "\nNegation Tests:\n";
+        run_test("Test Negation Positive", test_negation_positive);
+        run_test("Test Negation Negative", test_negation_negative);
+
+        std::cout << "\nIncrement Tests:\n";
+        run_test("Test Increment Prefix", test_increment_prefix);
+        run_test("Test Increment Postfix", test_increment_postfix);
 
         std::cout << "\nTest Results:\n";
         std::cout << "Passed: " << passed << "/" << total << std::endl;
