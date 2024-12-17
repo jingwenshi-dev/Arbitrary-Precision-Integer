@@ -63,6 +63,12 @@ public:
         return num == expected;
     }
 
+    static bool test_int64_constructor_negative_zero() {
+        const bigint num(-0);
+        const auto expected = bigint(0);
+        return num == expected;
+    }
+
     static bool test_string_constructor_empty() {
         try {
             bigint num("");
@@ -83,6 +89,18 @@ public:
 
     static bool test_string_negative_zero() {
         const bigint num("-0");
+        const auto expected = bigint(0);
+        return num == expected;
+    }
+
+    static bool test_string_positive_zero() {
+        const bigint num("+0");
+        const auto expected = bigint(0);
+        return num == expected;
+    }
+
+    static bool test_string_long_zero() {
+        const bigint num("000000000");
         const auto expected = bigint(0);
         return num == expected;
     }
@@ -164,10 +182,13 @@ public:
                  test_int64_constructor_equal_to_str_negative);
         run_test("Test Int64 Constructor with Max Value", test_int64_constructor_max);
         run_test("Test Int64 Constructor with Min Value", test_int64_constructor_min);
+        run_test("Test Int64 Constructor with Negative Zero", test_int64_constructor_negative_zero);
         run_test("Test String Constructor with Invalid String", test_string_constructor_invalid);
         run_test("Test String Constructor with Empty String", test_string_constructor_empty);
         run_test("Test String Constructor with Invalid String", test_string_constructor_invalid);
+        run_test("Test String Constructor with Positive Zero", test_string_positive_zero);
         run_test("Test String Constructor with Negative Zero", test_string_negative_zero);
+        run_test("Test String Constructor with Long Zero", test_string_long_zero);
         run_test("Test String Constructor with Positive Sign Only", test_string_positive_sign_only);
         run_test("Test String Constructor with Negative Sign Only", test_string_negative_sign_only);
 

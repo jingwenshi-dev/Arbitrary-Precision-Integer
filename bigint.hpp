@@ -13,6 +13,12 @@ private:
     bool isNegative{};
     std::vector<std::uint8_t> digits;
 
+    static void remove_leading_zeros(std::vector<std::uint8_t> &digits) {
+        while (digits.size() > 1 && digits.back() == 0) {
+            digits.pop_back();
+        }
+    }
+
     void str_to_bigint(const std::string &str) {
         isNegative = str[0] == '-';
         size_t start = 0;
@@ -32,6 +38,7 @@ private:
 
         // Handle negative zero
         if (is_zero(this->digits)) isNegative = false;
+        remove_leading_zeros(this->digits);
     }
 
     static bool is_abs_less_than(const std::vector<std::uint8_t> &lhs, const std::vector<std::uint8_t> &rhs) {
