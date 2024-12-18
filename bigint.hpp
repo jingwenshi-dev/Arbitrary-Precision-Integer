@@ -373,7 +373,6 @@ public:
         return *this;
     }
 
-    // Friend functions to allow using compound assignment operators as it will call private parameters.
     /**
      * @brief Addition Operator: Add two numbers
      * @param lhs The first number to be added
@@ -382,6 +381,7 @@ public:
      */
     friend bigint operator+(bigint lhs, const bigint &rhs)
     {
+        // Friend functions to allow using compound assignment operators as it will call private parameters.
         return lhs += rhs;
     }
 
