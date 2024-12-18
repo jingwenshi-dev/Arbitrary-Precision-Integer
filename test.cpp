@@ -2,7 +2,8 @@
 #include <string>
 #include <sstream>
 
-class Test {
+class Test
+{
 private:
     std::size_t passed = 0;
     std::size_t total = 0;
@@ -12,16 +13,23 @@ private:
      * @param name Name of the test
      * @param test Function pointer to the test
      */
-    void run_test(const std::string &name, bool (*test)()) {
+    void run_test(const std::string &name, bool (*test)())
+    {
         // Reference: https://stackoverflow.com/questions/76138430/how-to-pass-function-as-an-argument-to-another-function-in-c
-        try {
-            if (test()) {
+        try
+        {
+            if (test())
+            {
                 std::cout << "PASSED: " << name << std::endl;
                 passed++;
-            } else {
+            }
+            else
+            {
                 std::cout << "FAILED: " << name << std::endl;
             }
-        } catch (const std::exception &e) {
+        }
+        catch (const std::exception &e)
+        {
             std::cout << "FAILED: " << name << " - " << e.what() << std::endl;
         }
         total++;
@@ -32,7 +40,8 @@ public:
      * @brief Test if the default constructor initializes the number to zero and compare it with the int64 constructor
      * @return True iff the number is initialized to zero
      */
-    static bool test_default_constructor_equal_to_zero_int() {
+    static bool test_default_constructor_equal_to_zero_int()
+    {
         const bigint num;
         const auto expected = bigint(0);
         return num == expected;
@@ -42,7 +51,8 @@ public:
      * @brief Test if the default constructor initializes the number to zero and compare it with the string constructor
      * @return True iff the number is initialized to zero
      */
-    static bool test_default_constructor_equal_to_zero_string() {
+    static bool test_default_constructor_equal_to_zero_string()
+    {
         const bigint num;
         const auto expected = bigint("0");
         return num == expected;
@@ -52,7 +62,8 @@ public:
      * @brief Test if the int64 constructor initializes POSITIVE numbers correctly and compare it with the string constructor
      * @return True iff the number is correctly initialized
      */
-    static bool test_int64_constructor_equal_to_str_positive() {
+    static bool test_int64_constructor_equal_to_str_positive()
+    {
         constexpr std::int64_t val = 123;
         const bigint num(val);
         const auto expected = bigint("123");
@@ -63,7 +74,8 @@ public:
      * @brief Test if the int64 constructor initializes NEGATIVE numbers correctly and compare it with the string constructor
      * @return True iff the number is correctly initialized
      */
-    static bool test_int64_constructor_equal_to_str_negative() {
+    static bool test_int64_constructor_equal_to_str_negative()
+    {
         constexpr std::int64_t val = -123;
         const bigint num(val);
         const auto expected = bigint("-123");
@@ -74,7 +86,8 @@ public:
      * @brief Test if the int64 constructor initializes the MAX of int64_t correctly and compare it with the string constructor
      * @return True iff the number is correctly initialized
      */
-    static bool test_int64_constructor_max() {
+    static bool test_int64_constructor_max()
+    {
         constexpr std::int64_t val = std::numeric_limits<std::int64_t>::max();
         const bigint num(val);
         const auto expected = bigint(std::to_string(val));
@@ -85,7 +98,8 @@ public:
      * @brief Test if the int64 constructor initializes the MIN of int64_t correctly and compare it with the string constructor
      * @return True iff the number is correctly initialized
      */
-    static bool test_int64_constructor_min() {
+    static bool test_int64_constructor_min()
+    {
         constexpr std::int64_t val = std::numeric_limits<std::int64_t>::min();
         const bigint num(val);
         const auto expected = bigint(std::to_string(val));
@@ -96,7 +110,8 @@ public:
      * @brief Test if the int64 constructor initialize NEGATIVE ZERO correctly.
      * @return True iff the number is correctly initialized
      */
-    static bool test_int64_constructor_negative_zero() {
+    static bool test_int64_constructor_negative_zero()
+    {
         const bigint num(-0);
         const auto expected = bigint(0);
         return num == expected;
@@ -106,11 +121,15 @@ public:
      * @brief Test if the string constructor throws error correctly with an empty string
      * @return True iff the exception is thrown
      */
-    static bool test_string_constructor_empty() {
-        try {
+    static bool test_string_constructor_empty()
+    {
+        try
+        {
             bigint num("");
             return false;
-        } catch (const std::invalid_argument &) {
+        }
+        catch (const std::invalid_argument &)
+        {
             return true;
         }
     }
@@ -119,11 +138,15 @@ public:
      * @brief Test if the string constructor throws error correctly with an invalid string
      * @return True iff the exception is thrown
      */
-    static bool test_string_constructor_invalid() {
-        try {
+    static bool test_string_constructor_invalid()
+    {
+        try
+        {
             bigint num("-123abc12");
             return false;
-        } catch (const std::invalid_argument &) {
+        }
+        catch (const std::invalid_argument &)
+        {
             return true;
         }
     }
@@ -132,7 +155,8 @@ public:
      * @brief Test if the string constructor initialized NEGATIVE ZERO correctly
      * @return True iff the number is correctly initialized
      */
-    static bool test_string_negative_zero() {
+    static bool test_string_negative_zero()
+    {
         const bigint num("-0");
         const auto expected = bigint(0);
         return num == expected;
@@ -142,7 +166,8 @@ public:
      * @brief Test if the string constructor initialized POSITIVE ZERO correctly
      * @return True iff the number is correctly initialized
      */
-    static bool test_string_positive_zero() {
+    static bool test_string_positive_zero()
+    {
         const bigint num("+0");
         const auto expected = bigint(0);
         return num == expected;
@@ -152,7 +177,8 @@ public:
      * @brief Test if the string constructor initialized LONG ZERO correctly
      * @return True iff the number is correctly initialized
      */
-    static bool test_string_long_zero() {
+    static bool test_string_long_zero()
+    {
         const bigint num("-000000000");
         const auto expected = bigint(0);
         return num == expected;
@@ -162,11 +188,15 @@ public:
      * @brief Test if the string constructor throws error correctly with only one positive sign
      * @return True iff the exception is thrown
      */
-    static bool test_string_positive_sign_only() {
-        try {
+    static bool test_string_positive_sign_only()
+    {
+        try
+        {
             const bigint num("+");
             return false;
-        } catch (const std::invalid_argument &) {
+        }
+        catch (const std::invalid_argument &)
+        {
             return true;
         }
     }
@@ -175,11 +205,15 @@ public:
      * @brief Test if the string constructor throws error correctly with only one negative sign
      * @return True iff the exception is thrown
      */
-    static bool test_string_negative_sign_only() {
-        try {
+    static bool test_string_negative_sign_only()
+    {
+        try
+        {
             const bigint num("-");
             return false;
-        } catch (const std::invalid_argument &) {
+        }
+        catch (const std::invalid_argument &)
+        {
             return true;
         }
     }
@@ -188,7 +222,8 @@ public:
      * @brief Test if the negation operator correctly negates a positive number
      * @return True iff the result is negative
      */
-    static bool test_negation_positive() {
+    static bool test_negation_positive()
+    {
         const bigint num(123);
         const auto expected = bigint(-123);
         return -num == expected;
@@ -198,7 +233,8 @@ public:
      * @brief Test if the negation operator correctly negates a negative number
      * @return True iff the result is positive
      */
-    static bool test_negation_negative() {
+    static bool test_negation_negative()
+    {
         const bigint num(-123);
         const auto expected = bigint(123);
         return -num == expected;
@@ -208,7 +244,8 @@ public:
      * @brief Test if the negation operator correctly negates zero
      * @return True iff the result is zero
      */
-    static bool test_negation_zero() {
+    static bool test_negation_zero()
+    {
         const bigint num(0);
         const auto expected = bigint(0);
         return -num == expected;
@@ -218,7 +255,8 @@ public:
      * @brief Test if the increment operator correctly increments the number and returns the original number
      * @return True iff the original number is returned and incremented
      */
-    static bool test_increment_prefix() {
+    static bool test_increment_prefix()
+    {
         bigint num1(123);
         const bigint num2 = ++num1;
         const auto expected = bigint(124);
@@ -229,7 +267,8 @@ public:
      * @brief Test if the increment operator correctly increments the number and returns the original number
      * @return True iff the returned number is the original number and the current number is incremented
      */
-    static bool test_increment_postfix() {
+    static bool test_increment_postfix()
+    {
         bigint num1(123);
         const bigint num2 = num1++;
         const auto expected_original = bigint(123);
@@ -241,7 +280,8 @@ public:
      * @brief Test if the decrement operator correctly decrements the number and returns the decremented number
      * @return True iff the original number is returned and decremented
      */
-    static bool test_decrement_prefix() {
+    static bool test_decrement_prefix()
+    {
         bigint num1(123);
         const bigint num2 = --num1;
         const auto expected = bigint(122);
@@ -252,7 +292,8 @@ public:
      * @brief Test if the decrement operator correctly decrements the number and returns the original number
      * @return True iff the returned number is the original number and the current number is decremented
      */
-    static bool test_decrement_postfix() {
+    static bool test_decrement_postfix()
+    {
         bigint num1(123);
         const bigint num2 = num1--;
         const auto expected_original = bigint(123);
@@ -264,7 +305,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds two positive numbers
      * @return True iff the numbers are correctly added
      */
-    static bool test_addition_assignment_all_positive() {
+    static bool test_addition_assignment_all_positive()
+    {
         bigint num1(123);
         const bigint num2(456);
         num1 += num2;
@@ -276,7 +318,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds two negative numbers
      * @return True iff the numbers are correctly added
      */
-    static bool test_addition_assignment_all_negative() {
+    static bool test_addition_assignment_all_negative()
+    {
         bigint num1(-123);
         const bigint num2(-456);
         num1 += num2;
@@ -284,12 +327,12 @@ public:
         return num1 == expected;
     }
 
-
     /**
      * @brief Test if the addition assignment operator correctly adds a positive and a negative number
      * @return True iff the numbers are correctly added
      */
-    static bool test_addition_assignment_positive_add_negative() {
+    static bool test_addition_assignment_positive_add_negative()
+    {
         bigint num1(123);
         const bigint num2(-456);
         num1 += num2;
@@ -301,7 +344,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds a negative and a positive number
      * @return True iff the numbers are correctly added
      */
-    static bool test_addition_assignment_negative_add_positive() {
+    static bool test_addition_assignment_negative_add_positive()
+    {
         bigint num1(-123);
         const bigint num2(456);
         num1 += num2;
@@ -313,7 +357,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds zero and a positive number
      * @return True iff the numbers are correctly added
      */
-    static bool test_addition_assignment_zero_add_positive() {
+    static bool test_addition_assignment_zero_add_positive()
+    {
         bigint num1(0);
         const bigint num2(123);
         num1 += num2;
@@ -325,7 +370,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds zero and a negative number
      * @return True iff the numbers are correctly added
      */
-    static bool test_addition_assignment_zero_add_negative() {
+    static bool test_addition_assignment_zero_add_negative()
+    {
         bigint num1(0);
         const bigint num2(-123);
         num1 += num2;
@@ -337,7 +383,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds a positive and a negative number to get zero
      * @return True iff the result is zero
      */
-    static bool test_addition_assignment_sum_zero_positive() {
+    static bool test_addition_assignment_sum_zero_positive()
+    {
         bigint num1(+123);
         const bigint num2(-123);
         num1 += num2;
@@ -349,7 +396,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds a negative and a positive number to get zero
      * @return True iff the result is zero
      */
-    static bool test_addition_assignment_sum_zero_negative() {
+    static bool test_addition_assignment_sum_zero_negative()
+    {
         bigint num1(-123);
         const bigint num2(+123);
         num1 += num2;
@@ -361,7 +409,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds the MAX value of int64_t
      * @return True iff the result is correct
      */
-    static bool test_addition_assignment_max() {
+    static bool test_addition_assignment_max()
+    {
         constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
         bigint num1(max_int64);
         const bigint num2(max_int64);
@@ -374,7 +423,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds the MIN value of int64_t
      * @return True iff the result is correct
      */
-    static bool test_addition_assignment_min() {
+    static bool test_addition_assignment_min()
+    {
         constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
         bigint num1(min_int64);
         const bigint num2(min_int64);
@@ -387,7 +437,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds the MIN and MAX value of int64_t
      * @return
      */
-    static bool test_addition_assignment_min_add_max() {
+    static bool test_addition_assignment_min_add_max()
+    {
         constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
         constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
         bigint num1(min_int64);
@@ -401,7 +452,8 @@ public:
      * @brief Test if the addition assignment operator correctly adds the MAX and MIN value of int64_t
      * @return True iff the result is correct
      */
-    static bool test_addition_assignment_max_add_min() {
+    static bool test_addition_assignment_max_add_min()
+    {
         constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
         constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
         bigint num1(max_int64);
@@ -415,7 +467,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts a small number from a big number (all positive)
      * @return True iff the result is correct
      */
-    static bool test_subtraction_assignment_positive_big_minus_small() {
+    static bool test_subtraction_assignment_positive_big_minus_small()
+    {
         bigint num1(456);
         const bigint num2(123);
         num1 -= num2;
@@ -427,7 +480,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts a big number from a small number (all positive)
      * @return True iff the result is correct
      */
-    static bool test_subtraction_assignment_positive_small_minus_big() {
+    static bool test_subtraction_assignment_positive_small_minus_big()
+    {
         bigint num1(123);
         const bigint num2(456);
         num1 -= num2;
@@ -439,7 +493,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts a small number from a big number (all negative)
      * @return True iff the result is correct
      */
-    static bool test_subtraction_assignment_negative_big_minus_small() {
+    static bool test_subtraction_assignment_negative_big_minus_small()
+    {
         bigint num1(-123);
         const bigint num2(-456);
         num1 -= num2;
@@ -451,7 +506,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts a big number from a small number (all negative)
      * @return True iff the result is correct
      */
-    static bool test_subtraction_assignment_negative_small_minus_big() {
+    static bool test_subtraction_assignment_negative_small_minus_big()
+    {
         bigint num1(-456);
         const bigint num2(-123);
         num1 -= num2;
@@ -463,7 +519,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts a small negative number from a big positive number
      * @return True iff the result is correct
      */
-    static bool test_subtraction_assignment_mixed_big_minus_small() {
+    static bool test_subtraction_assignment_mixed_big_minus_small()
+    {
         bigint num1(456);
         const bigint num2(-123);
         num1 -= num2;
@@ -475,7 +532,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts a big positive number from a small negative number
      * @return True iff the result is correct
      */
-    static bool test_subtraction_assignment_mixed_small_minus_big() {
+    static bool test_subtraction_assignment_mixed_small_minus_big()
+    {
         bigint num1(-123);
         const bigint num2(456);
         num1 -= num2;
@@ -487,7 +545,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts two same numbers
      * @return True iff the result is zero
      */
-    static bool test_subtraction_assignment_diff_zero() {
+    static bool test_subtraction_assignment_diff_zero()
+    {
         bigint num1(123);
         const bigint num2(123);
         num1 -= num2;
@@ -499,7 +558,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts a positive number from zero
      * @return True iff the result is the negation of the number
      */
-    static bool test_subtraction_assignment_zero_minus_positive() {
+    static bool test_subtraction_assignment_zero_minus_positive()
+    {
         bigint num1(0);
         const bigint num2(123);
         num1 -= num2;
@@ -511,7 +571,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts a negative number from zero
      * @return True iff the result is the negation of the number
      */
-    static bool test_subtraction_assignment_zero_minus_negative() {
+    static bool test_subtraction_assignment_zero_minus_negative()
+    {
         bigint num1(0);
         const bigint num2(-123);
         num1 -= num2;
@@ -523,7 +584,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts the MIN value of int64_t from the MAX value of int64_t
      * @return True iff the result is correct
      */
-    static bool test_subtraction_assignment_max_minus_min() {
+    static bool test_subtraction_assignment_max_minus_min()
+    {
         constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
         constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
         bigint num1(max_int64);
@@ -537,7 +599,8 @@ public:
      * @brief Test if the subtraction assignment operator correctly subtracts the MAX value of int64_t from the MIN value of int64_t
      * @return True iff the result is correct
      */
-    static bool test_subtraction_assignment_min_minus_max() {
+    static bool test_subtraction_assignment_min_minus_max()
+    {
         constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
         constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
         bigint num1(min_int64);
@@ -551,7 +614,8 @@ public:
      * @brief Test if the multiplication assignment operator correctly multiplies two positive numbers
      * @return True iff the result is correct
      */
-    static bool test_multiplication_assignment_all_positive() {
+    static bool test_multiplication_assignment_all_positive()
+    {
         bigint num1(123);
         const bigint num2(456);
         num1 *= num2;
@@ -563,7 +627,8 @@ public:
      * @brief Test if the multiplication assignment operator correctly multiplies two negative numbers
      * @return True iff the result is correct
      */
-    static bool test_multiplication_assignment_all_negative() {
+    static bool test_multiplication_assignment_all_negative()
+    {
         bigint num1(-123);
         const bigint num2(-456);
         num1 *= num2;
@@ -575,7 +640,8 @@ public:
      * @brief Test if the multiplication assignment operator correctly multiplies a positive and a negative number
      * @return True iff the result is correct
      */
-    static bool test_multiplication_assignment_positive_negative() {
+    static bool test_multiplication_assignment_positive_negative()
+    {
         bigint num1(123);
         const bigint num2(-456);
         num1 *= num2;
@@ -587,7 +653,8 @@ public:
      * @brief Test if the multiplication assignment operator correctly multiplies a negative and a positive number
      * @return True iff the result is correct
      */
-    static bool test_multiplication_assignment_negative_positive() {
+    static bool test_multiplication_assignment_negative_positive()
+    {
         bigint num1(-123);
         const bigint num2(456);
         num1 *= num2;
@@ -599,7 +666,8 @@ public:
      * @brief Test if the multiplication assignment operator correctly multiplies zero and a positive number
      * @return True iff the result is zero
      */
-    static bool test_multiplication_assignment_zero_positive() {
+    static bool test_multiplication_assignment_zero_positive()
+    {
         bigint num1(0);
         const bigint num2(123);
         num1 *= num2;
@@ -611,7 +679,8 @@ public:
      * @brief Test if the multiplication assignment operator correctly multiplies zero and a negative number
      * @return True iff the result is zero
      */
-    static bool test_multiplication_assignment_zero_negative() {
+    static bool test_multiplication_assignment_zero_negative()
+    {
         bigint num1(0);
         const bigint num2(-123);
         num1 *= num2;
@@ -623,7 +692,8 @@ public:
      * @brief Test if the multiplication assignment operator correctly multiplies the MAX value of int64_t
      * @return True iff the result is correct
      */
-    static bool test_multiplication_assignment_max() {
+    static bool test_multiplication_assignment_max()
+    {
         constexpr std::int64_t max_int64 = std::numeric_limits<std::int64_t>::max();
         bigint num1(max_int64);
         const bigint num2(max_int64);
@@ -636,7 +706,8 @@ public:
      * @brief Test if the multiplication assignment operator correctly multiplies the MIN value of int64_t
      * @return True iff the result is correct
      */
-    static bool test_multiplication_assignment_min() {
+    static bool test_multiplication_assignment_min()
+    {
         constexpr std::int64_t min_int64 = std::numeric_limits<std::int64_t>::min();
         bigint num1(min_int64);
         const bigint num2(min_int64);
@@ -649,7 +720,8 @@ public:
      * @brief Test if the addition operator correctly returns the sum of two positive numbers without modifying the original numbers
      * @return True iff the original numbers are not modified and the returned number is correct
      */
-    static bool test_addition_operator_properties() {
+    static bool test_addition_operator_properties()
+    {
         const bigint num1(123);
         const bigint num2(456);
         const auto result = num1 + num2;
@@ -661,7 +733,8 @@ public:
      * @brief Test if the subtraction operator correctly returns the difference of two numbers without modifying the original numbers
      * @return True iff the original numbers are not modified and the returned number is correct
      */
-    static bool test_subtraction_operator_properties() {
+    static bool test_subtraction_operator_properties()
+    {
         const bigint num1(456);
         const bigint num2(123);
         const auto result = num1 - num2;
@@ -673,7 +746,8 @@ public:
      * @brief Test if the multiplication operator correctly returns the product of two numbers without modifying the original numbers
      * @return True iff the original numbers are not modified and the returned number is correct
      */
-    static bool test_multiplication_operator_properties() {
+    static bool test_multiplication_operator_properties()
+    {
         const bigint num1(123);
         const bigint num2(456);
         const auto result = num1 * num2;
@@ -685,7 +759,8 @@ public:
      * @brief Test if the inequality operator correctly compares two different numbers
      * @return True iff the two numbers are not equal
      */
-    static bool test_inequality_operator() {
+    static bool test_inequality_operator()
+    {
         const bigint num1(123);
         const bigint num2(456);
         return num1 != num2;
@@ -695,7 +770,8 @@ public:
      * @brief Test if the less than operator correctly compares two positive numbers
      * @return True iff the first number is less than the second number
      */
-    static bool test_less_than_operator_all_positive() {
+    static bool test_less_than_operator_all_positive()
+    {
         const bigint num1(123);
         const bigint num2(456);
         return num1 < num2;
@@ -705,7 +781,8 @@ public:
      * @brief Test if the less than operator correctly compares two negative numbers
      * @return True iff the first number is less than the second number
      */
-    static bool test_less_than_operator_all_negative() {
+    static bool test_less_than_operator_all_negative()
+    {
         const bigint num1(-456);
         const bigint num2(-123);
         return num1 < num2;
@@ -715,7 +792,8 @@ public:
      * @brief Test if the less than operator correctly compares a positive and a negative number
      * @return True if the first number if negative
      */
-    static bool test_less_than_operator_mixed() {
+    static bool test_less_than_operator_mixed()
+    {
         const bigint num1(-123);
         const bigint num2(123);
         return num1 < num2;
@@ -725,7 +803,8 @@ public:
      * @brief Test if the less than or equal operator correctly compares two same numbers
      * @return True iff the two numbers are equal
      */
-    static bool test_less_than_equal_operator_equal() {
+    static bool test_less_than_equal_operator_equal()
+    {
         const bigint num1(123);
         const bigint num2(123);
         return num1 <= num2;
@@ -735,7 +814,8 @@ public:
      * @brief Test if the less than or equal operator correctly compares negative number and zero
      * @return True iff the first number is negative
      */
-    static bool test_less_than_equal_operator_less_than() {
+    static bool test_less_than_equal_operator_less_than()
+    {
         const bigint num1(-456);
         const bigint num2(0);
         return num1 <= num2;
@@ -745,7 +825,8 @@ public:
      * @brief Test greater than operator correctly compares two number
      * @return True iff the first number is greater than the second number
      */
-    static bool test_greater_than_operator() {
+    static bool test_greater_than_operator()
+    {
         const bigint num1(123);
         const bigint num2(0);
         return num1 > num2;
@@ -755,7 +836,8 @@ public:
      * @brief Test greater than or equal operator correctly compares two equal numbers
      * @return True iff the two numbers are equal
      */
-    static bool test_greater_than_equal_operator() {
+    static bool test_greater_than_equal_operator()
+    {
         const bigint num1(123);
         const bigint num2(123);
         return num1 >= num2;
@@ -765,7 +847,8 @@ public:
      * @brief Test if the insertion operator correctly sends the positive number to the output stream
      * @return True if the two strings are equal
      */
-    static bool test_insertion_operator_positive() {
+    static bool test_insertion_operator_positive()
+    {
         const bigint num(123);
         std::ostringstream stream;
         stream << num;
@@ -776,7 +859,8 @@ public:
      * @brief Test if the insertion operator correctly sends the negative number to the output stream
      * @return True if the two strings are equal
      */
-    static bool test_insertion_operator_negative() {
+    static bool test_insertion_operator_negative()
+    {
         const bigint num(-123);
         std::ostringstream stream;
         stream << num;
@@ -787,7 +871,8 @@ public:
      * @brief Test if the insertion operator correctly sends zero to the output stream
      * @return True if the two strings are equal
      */
-    static bool test_insertion_operator_zero() {
+    static bool test_insertion_operator_zero()
+    {
         const bigint num(0);
         std::ostringstream stream;
         stream << num;
@@ -797,7 +882,8 @@ public:
     /**
      * @brief Run all tests
      */
-    void run_all_tests() {
+    void run_all_tests()
+    {
         std::cout << "\nRunning tests..." << std::endl;
 
         std::cout << "\nConstructor Tests:" << std::endl;
@@ -878,20 +964,11 @@ public:
         run_test("Test Multiplication Assignment with Min Int64", test_multiplication_assignment_min);
 
         std::cout << "\nBinary Operator Tests:" << std::endl;
-        std::cout <<
-                "Note: Binary operators call the compound assignment operators, so they only have one test case each to check properties hold."
-                << std::endl;
         run_test("Test Addition Operator Properties", test_addition_operator_properties);
         run_test("Test Subtraction Operator Properties", test_subtraction_operator_properties);
         run_test("Test Multiplication Operator Properties", test_multiplication_operator_properties);
 
         std::cout << "\nComparison Operator Tests:" << std::endl;
-        std::cout <<
-                "Note: != depends on ==, > depends on <=, >= depends on <, so them only have 1 test case each to check if values are returned correctly."
-                "<= depends on < and ==, so it is tested separately for both cases."
-                "< is tested for all positive, all negative, and mixed cases as it is the base of all operators."
-                "== is not tested as it is the fundamental of all operators and is used in all tests."
-                << std::endl;
         run_test("Test Inequality Operator", test_inequality_operator);
         run_test("Test Less Than Operator All Positive", test_less_than_operator_all_positive);
         run_test("Test Less Than Operator All Negative", test_less_than_operator_all_negative);
@@ -913,7 +990,8 @@ public:
     }
 };
 
-int main() {
+int main()
+{
     Test test;
     test.run_all_tests();
 }
