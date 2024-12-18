@@ -63,7 +63,50 @@ bigint d("-123");	// d = -123
 - `bool is_abs_zero(const vector<uint8_t> &num)`: Returns true if the magnitude of the bigint object is zero, false otherwise.
 	1. Check if the size of the input vector is 1 and the only element is zero.
 
-- `vector<uint8_t> add_abs(const vector<uint8_t> &longer, const vector<uint8_t> &shorter)`:
+- `vector<uint8_t> add_abs(const vector<uint8_t> &longer, const vector<uint8_t> &shorter)`: Helper function that returns the sum of the magnitudes of two bigint objects.
+	1. Create a `result` vector with the size of the `long`. Reserve one more space for the carry.
+	2. Initialize a `carry` variable to 0.
+	3. Loop through `long`.
+      	1. Calculate the sum by adding the current digit of the `long` with the `carry`.
+      	2. If the digit of `short` at current index exists, add it to the sum.
+      	3. Mod the sum by 10 to get the current digit of the result.
+      	4. Divide the sum by 10 to get the carry for next iteration (i.e. 0 or 1).
+	4. If there is a `carry` after the loop, push it to the result vector.
+	5. Return the `result` vector.
+
+	> **Note:**
+	> `add_abs` requires the first parameter to be the vector with a longer size, as the for loop will iterate through the longer vector. Incorrect order will cause incomplete results and unexpected behavior.
+
+- `vector<uint8_t> subtract_abs(const vector<uint8_t> &big, const vector<uint8_t> &small)`: Helper function that returns the difference of the magnitudes of two bigint objects.
+	1. Declare a `result` vector and reserve the size of `big`.
+	2. Initialize a `borrow` variable to 0.
+	3. Loop through `big`.
+      	1. Calculate the difference by subtracting the current digit of `big` and `borrow`.
+      	2. If the digit of `small` at the current index exists, subtract it from the difference.
+      	3. Check if the difference is negative. If so, add 10 to the difference and set `borrow` to 1. Otherwise, set `borrow` to 0.
+      	4. Store the current difference to the result vector.
+	4. Return the `result` vector.
+
+	> **Note:**
+	> `subtract_abs` requires the first parameter to be the vector with a larger magnitude, as the function does not handle negative cases. Incorrect order will cause unexpected behavior.
+
+- `vector<uint8_t> multiply_abs(const vector<uint8_t> &lhs, const vector<uint8_t> &rhs)`: Helper function that returns the product of the magnitudes of two bigint objects.
+	1. Check if `lhs` or `rhs` is zero. If so, return a vector with one element 0.
+	2. Create a `result` vector of zeros with the size of `lhs` + `rhs`.
+	3. Loop through `lhs` with index `i`.
+      	1. Initialize a `carry` variable to 0.
+	  	2. Loop through `rhs` with index `j`.
+			1. Calculate the sum of current digit of `result` at index `i + j` with `carry`.
+			2. Add the product of the current digit of `lhs` at index `i` and `rhs` at index `j` to the sum.
+			3. Store the sum mod 10 to the current digit of `result` at index `i + j`.
+			4. Divide the sum by 10 to get the carry for the next iteration.
+    4. If there is a `carry` after the inner loop, set the current digit of `result` at index `i + rhs.size()` to the `carry`.
+    5. Return the `result` vector.
+
+	> **Note:**
+	> The `multiply_abs` function uses the same algorithm as the manual vertical multiplication algorithm. It uses a nested loop where each digit of one number is multiplied by every digit of the other number. The `result` vector is initialized with zeros instead of just reserving space. This is because, in vertical multiplication, the product of the current digits needs to be added to the digit above it along with `carry`. If the vector is not initialized to zeros, the first iteration will access garbage values. When the inner loop ends, the `carry` is assigned at the index `i + rhs.size()` instead of being pushed to the end of the `result` like `add_abs` and `subtract_abs`. This is because `result` is initialized with zeros, pushing the `carry` to the end will result in an incorrect answer.
+
+
 
 ## Class Methods (Public Operators)
 
