@@ -90,24 +90,24 @@ private:
 
     /**
      * @brief Add the absolute values of two numbers
-     * @param big Vector of digits of the larger number
-     * @param small Vector of digits of the second number
+     * @param longer Vector of digits of the larger number
+     * @param shorter Vector of digits of the second number
      * @return A vector of digits smaller the sum of the two numbers' absolute values
      */
     static std::vector<std::uint8_t>
-    add_abs(const std::vector<std::uint8_t> &big, const std::vector<std::uint8_t> &small)
+    add_abs(const std::vector<std::uint8_t> &longer, const std::vector<std::uint8_t> &shorter)
     {
         std::vector<std::uint8_t> result;
-        result.resize(std::max(big.size(), small.size()));
+        result.resize(std::max(longer.size(), shorter.size()));
         result.reserve(result.size() + 1); // Max size, e.g. 999 + 999 = 1998 -> 4 digits
 
         std::uint8_t carry = 0;
 
-        for (std::size_t i = 0; i < big.size(); i++)
+        for (std::size_t i = 0; i < longer.size(); i++)
         {
-            std::uint8_t sum = carry + big[i];
-            if (i < small.size())
-                sum += small[i];
+            std::uint8_t sum = carry + longer[i];
+            if (i < shorter.size())
+                sum += shorter[i];
 
             result[i] = sum % 10;
             carry = sum / 10;
