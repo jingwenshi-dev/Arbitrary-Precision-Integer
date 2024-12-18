@@ -5,7 +5,7 @@
 bigint is a C++ class implementation for basic calculations that support arbitrary precision.
 The operation supported including `+, +=, ++, -, -=, --, *, *=, -(negation), ==, !=, <, <=, >, >=, <<`.
 
-Note: For simplicity, in this documentation, `vector`, `string`, `int64_t`, and `uint8_t` refer to `std::vector`, `std::string`, `std::int64_t`, and `std::uint8_t` from the standard library.
+Note: For simplicity, in this documentation, `vector`, `string`, `int64_t`, and `uint8_t` refer to `vector`, `string`, `int64_t`, and `uint8_t` from the standard library.
 
 ## Class Parameters (Private)
 
@@ -43,7 +43,29 @@ bigint c("123");	// c = 123
 bigint d("-123");	// d = -123
 ```
 
-## Class Methods (Public)
+## Class Methods (Private Helpers)
+- `void remove_leading_zeros(vector<uint8_t> &digits)`: Removes leading zeros in the input vector.
+	1. Iterate through the input vector in reverse order while the last element is zero and the size of the vector is greater than 1.
+	2. Pop the last element if it is zero.
+
+- `void str_to_bigint(const string &str)`: Extracts and stores the sign and digits from the input string.
+	1. Check if the first char of the input string is a minus sign. If so, set `isNegative` to true.
+	2. If the fist char is a sign, check if it is the only char in the string. If so, throw an `invalid_argument` exception. Otherwise, set the start index to 1.
+	3. Loop through the input string from the start index to the end. If any char is not a digit, throw an `invalid_argument` exception.
+	4. Push each digit to `digits` results the input string is stored in reverse order.
+	5. Call `remove_leading_zeros` helper function to remove leading zeros in `digits`.
+	6. Call `is_abs_zero` helper function to check if the absolute value of the bigint object is zero. If so, set `isNegative` to false to avoid negative zero.
+
+- `bool is_abs_less_than(const vector<uint8_t> &lhs, const vector<uint8_t> &rhs)`: Returns true if the magnitude of the left-hand side bigint object is less than the right-hand side bigint object, false otherwise.
+	1. If the size of `lhs` is less than the size of `rhs`, return true.
+	2. Loop through the two vectors in reverse order. If the current digit of `lhs` is less than the digit of `rhs`, return true. If the same, goes into the next iteration. Otherwise, return false.
+
+- `bool is_abs_zero(const vector<uint8_t> &num)`: Returns true if the magnitude of the bigint object is zero, false otherwise.
+	1. Check if the size of the input vector is 1 and the only element is zero.
+
+- `vector<uint8_t> add_abs(const vector<uint8_t> &longer, const vector<uint8_t> &shorter)`:
+
+## Class Methods (Public Operators)
 
 - `- (negation)`: Returns the negation of the bigint object
 	1. Change `isNegative` to the opposite if the bigint object is not zero.
@@ -230,5 +252,5 @@ bool c = a >= b;	// c = true
 
 ```c++
 bigint a(-123);		// a = 123
-std::cout << a;		// Output: -123
+cout << a;		// Output: -123
 ```
