@@ -431,28 +431,28 @@ public:
         return num1 == expected;
     }
 
-    static bool test_addition_operator_return() {
+    static bool test_addition_operator_properties() {
         const bigint num1(123);
         const bigint num2(456);
         const auto result = num1 + num2;
         const auto expected = bigint(123 + 456);
-        return result == expected;
+        return result == expected && num1 == bigint(123) && num2 == bigint(456);
     }
 
-    static bool test_subtraction_operator_return() {
+    static bool test_subtraction_operator_properties() {
         const bigint num1(456);
         const bigint num2(123);
         const auto result = num1 - num2;
         const auto expected = bigint(456 - 123);
-        return result == expected;
+        return result == expected && num1 == bigint(456) && num2 == bigint(123);
     }
 
-    static bool test_multiplication_operator_return() {
+    static bool test_multiplication_operator_properties() {
         const bigint num1(123);
         const bigint num2(456);
         const auto result = num1 * num2;
         const auto expected = bigint(123 * 456);
-        return result == expected;
+        return result == expected && num1 == bigint(123) && num2 == bigint(456);
     }
 
     static bool test_inequality_operator() {
@@ -606,11 +606,11 @@ public:
 
         std::cout << "\nBinary Operator Tests:" << std::endl;
         std::cout <<
-                "Note: Binary operators call the compound assignment operators, so they only have one test case each to check if values are returned correctly."
+                "Note: Binary operators call the compound assignment operators, so they only have one test case each to check properties hold."
                 << std::endl;
-        run_test("Test Addition Operator Returns", test_addition_operator_return);
-        run_test("Test Subtraction Operator Returns", test_subtraction_operator_return);
-        run_test("Test Multiplication Operator Returns", test_multiplication_operator_return);
+        run_test("Test Addition Operator Properties", test_addition_operator_properties);
+        run_test("Test Subtraction Operator Properties", test_subtraction_operator_properties);
+        run_test("Test Multiplication Operator Properties", test_multiplication_operator_properties);
 
         std::cout << "\nComparison Operator Tests:" << std::endl;
         std::cout <<
