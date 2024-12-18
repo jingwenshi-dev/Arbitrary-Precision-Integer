@@ -1,6 +1,7 @@
 #include "bigint.hpp"
 #include <string>
 #include <sstream>
+#include <random>
 
 class Test
 {
@@ -33,6 +34,28 @@ private:
             std::cout << "FAILED: " << name << " - " << e.what() << std::endl;
         }
         total++;
+    }
+
+    /**
+     * @brief Generate a random number of a given length
+     * @param len Length of the number
+     * @return Random number
+     */
+    static std::string generate_random_num(const std::size_t len)
+    {
+        // Reference https://stackoverflow.com/questions/13445688/how-to-generate-a-random-number-in-c
+
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 9);
+
+        std::string result;
+        for (std::size_t i = 0; i < len; ++i)
+        {
+            result += std::to_string(dist(rng));
+        }
+
+        return result;
     }
 
 public:
@@ -880,6 +903,126 @@ public:
     }
 
     /**
+     * @brief Test if the extraction operator correctly reads a positive number from the input stream
+     * @return True if the calculated number matches the expected number
+     */
+    static bool test_random_single_calculation()
+    {
+        // Reference: https://stackoverflow.com/questions/76138430/how-to-pass-function-as-an-argument-to-another-function-in-c
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist9(1, 9);
+
+        for (std::size_t i = 0; i < 1000; ++i)
+        {
+            const std::string num1_str = generate_random_num(dist9(rng));
+            const std::string num2_str = generate_random_num(dist9(rng));
+            const bigint num1(num1_str);
+            const bigint num2(num2_str);
+
+            const auto expected_addition = bigint(std::to_string(std::stoll(num1_str) + std::stoll(num2_str)));
+            const auto expected_subtraction = bigint(std::to_string(std::stoll(num1_str) - std::stoll(num2_str)));
+            const auto expected_multiplication = bigint(std::to_string(std::stoll(num1_str) * std::stoll(num2_str)));
+
+            if (num1 + num2 != expected_addition)
+            {
+                std::cout << "Failed Random Single Calculation Test: " << std::endl;
+                std::cout << "num1: " << num1_str << std::endl;
+                std::cout << "num2: " << num2_str << std::endl;
+                std::cout << "num1 + num2: " << num1 + num2 << std::endl;
+                std::cout << "expected_addition: " << expected_addition << std::endl;
+                return false;
+            }
+
+            if (num1 - num2 != expected_subtraction)
+            {
+                std::cout << "Failed Random Single Calculation Test: " << std::endl;
+                std::cout << "num1: " << num1_str << std::endl;
+                std::cout << "num2: " << num2_str << std::endl;
+                std::cout << "num1 + num2: " << num1 + num2 << std::endl;
+                std::cout << "expected_addition: " << expected_subtraction << std::endl;
+                return false;
+            }
+
+            if (num1 * num2 != expected_multiplication)
+            {
+                std::cout << "Failed Random Single Calculation Test: " << std::endl;
+                std::cout << "num1: " << num1_str << std::endl;
+                std::cout << "num2: " << num2_str << std::endl;
+                std::cout << "num1 + num2: " << num1 + num2 << std::endl;
+                std::cout << "expected_addition: " << expected_multiplication << std::endl;
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @brief Test if order or operations affect the result of the calculation
+     * @return True iff the result is correct
+     */
+    static bool test_random_order()
+    {
+        // Reference: https://stackoverflow.com/questions/76138430/how-to-pass-function-as-an-argument-to-another-function-in-c
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist6(1, 6);
+
+        for (int i = 0; i < 1000; ++i)
+        {
+            const std::string num1_str = generate_random_num(dist6(rng));
+            const std::string num2_str = generate_random_num(dist6(rng));
+            const std::string num3_str = generate_random_num(dist6(rng));
+            const bigint num1(num1_str);
+            const bigint num2(num2_str);
+            const bigint num3(num3_str);
+
+            if ((num1 + num2) - num3 != (num1 - num3) + num2)
+            {
+                std::cout << "Failed Random Order Test: " << std::endl;
+                std::cout << "num1: " << num1_str << std::endl;
+                std::cout << "num2: " << num2_str << std::endl;
+                std::cout << "num3: " << num3_str << std::endl;
+                std::cout << "(num1 + num2) - num3: " << (num1 + num2) - num3 << std::endl;
+                std::cout << "(num1 - num3) + num2: " << (num1 - num3) + num2 << std::endl;
+                return false;
+            }
+            if ((num1 * num2) * num3 != num1 * (num2 * num3))
+            {
+                std::cout << "Failed Random Order Test: " << std::endl;
+                std::cout << "num1: " << num1_str << std::endl;
+                std::cout << "num2: " << num2_str << std::endl;
+                std::cout << "num3: " << num3_str << std::endl;
+                std::cout << "(num1 * num2) * num3: " << (num1 * num2) * num3 << std::endl;
+                std::cout << "num1 * (num2 * num3): " << num1 * (num2 * num3) << std::endl;
+                return false;
+            }
+            if ((num1 + num2) * num3 != (num1 * num3) + (num2 * num3))
+            {
+                std::cout << "Failed Random Order Test: " << std::endl;
+                std::cout << "num1: " << num1_str << std::endl;
+                std::cout << "num2: " << num2_str << std::endl;
+                std::cout << "num3: " << num3_str << std::endl;
+                std::cout << "(num1 + num2) * num3: " << (num1 + num2) * num3 << std::endl;
+                std::cout << "(num1 * num3) + (num2 * num3): " << (num1 * num3) + (num2 * num3) << std::endl;
+                return false;
+            }
+            if (num1 * (num2 - num3) != (num1 * num2) - (num1 * num3))
+            {
+                std::cout << "Failed Random Order Test: " << std::endl;
+                std::cout << "num1: " << num1_str << std::endl;
+                std::cout << "num2: " << num2_str << std::endl;
+                std::cout << "num3: " << num3_str << std::endl;
+                std::cout << "num1 * (num2 - num3): " << num1 * (num2 - num3) << std::endl;
+                std::cout << "(num1 * num2) - (num1 * num3): " << (num1 * num2) - (num1 * num3) << std::endl;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * @brief Run all tests
      */
     void run_all_tests()
@@ -978,10 +1121,14 @@ public:
         run_test("Test Greater Than Operator", test_greater_than_operator);
         run_test("Test Greater Than Equal Operator", test_greater_than_equal_operator);
 
-        std::cout << "Insertion Operator Tests:" << std::endl;
+        std::cout << "\nInsertion Operator Tests:" << std::endl;
         run_test("Test Insertion Operator Positive", test_insertion_operator_positive);
         run_test("Test Insertion Operator Negative", test_insertion_operator_negative);
         run_test("Test Insertion Operator Zero", test_insertion_operator_zero);
+
+        std::cout << "\nRandom Tests:" << std::endl;
+        run_test("Test Random with Single Calculation", test_random_single_calculation);
+        run_test("Test Random with Different Order", test_random_order);
 
         std::cout << "\nTest Results:" << std::endl;
         std::cout << "Passed: " << passed << std::endl;
