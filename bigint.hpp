@@ -182,7 +182,7 @@ private:
                 curr += static_cast<std::uint8_t>(lhs[i] * rhs[j]);
 
                 result[i + j] = curr % 10;
-                carry = static_cast<std::uint8_t>(curr / 10);
+                carry = curr / 10;
             }
             // Handle the last carry
             if (carry)
