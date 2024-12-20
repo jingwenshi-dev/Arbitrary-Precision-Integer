@@ -193,6 +193,35 @@ private:
         return result;
     }
 
+    /**
+     * @brief Divide the absolute values of two numbers
+     * @param dividend Vector of digits of the dividend
+     * @param divisor Vector of digits of the divisor
+     * @return A vector of digits representing the quotient of the two numbers' absolute values
+     */
+    static std::vector<std::uint8_t> divide_abs(const std::vector<std::uint8_t> &dividend, const std::vector<std::uint8_t> &divisor)
+    {
+        // Reference: https://stackoverflow.com/questions/6121623/catching-exception-divide-by-zero
+        if (is_abs_zero(divisor))
+            throw std::logic_error("Division by zero");
+        if (is_abs_zero(dividend) || is_abs_less_than(dividend, divisor))
+            return {0};
+
+        std::vector<std::uint8_t> quotient(dividend.size());
+        std::vector<std::uint8_t> current_sum(dividend.size());
+
+        while (!is_abs_less_than(dividend, current_sum))
+        {
+            current_sum = add_abs(divisor, current_sum);
+            quotient = add_abs(quotient, {1});
+        }
+
+        // Is always greater than the dividend, subtract one from the quotient
+        quotient = subtract_abs(quotient, {1});
+
+        return quotient;
+    }
+
 public:
     /**
      * @brief Default constructor: Initialize the number to zero
@@ -374,6 +403,28 @@ public:
     }
 
     /**
+     * @brief Division Assignment Operator: Divide the current number by another number
+     * @param rhs Number to divide the current number by
+     * @return The current number after division
+     */
+    bigint &operator/=(const bigint &rhs)
+    {
+        if (is_abs_zero(rhs.digits))
+        {
+            // Reference https://stackoverflow.com/questions/6121623/catching-exception-divide-by-zero
+            throw std::logic_error("Error: Division by zero");
+        }
+
+        this->isNegative = this->isNegative != rhs.isNegative;
+        this->digits = divide_abs(this->digits, rhs.digits);
+
+        remove_leading_zeros(this->digits);
+        if (is_abs_zero(this->digits))
+            this->isNegative = false;
+        return *this;
+    }
+
+    /**
      * @brief Addition Operator: Add two numbers
      * @param lhs The first number to be added
      * @param rhs The second number to be added
@@ -405,6 +456,17 @@ public:
     friend bigint operator*(bigint lhs, const bigint &rhs)
     {
         return lhs *= rhs;
+    }
+
+    /**
+     * @brief Division Operator: Divide two numbers
+     * @param lhs The number to be divided
+     * @param rhs The number to divide by
+     * @return A new number that is the quotient of the two numbers
+     */
+    friend bigint operator/(bigint lhs, const bigint &rhs)
+    {
+        return lhs /= rhs;
     }
 
     /**

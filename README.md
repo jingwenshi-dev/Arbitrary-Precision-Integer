@@ -3,7 +3,7 @@
 ## Introduction
 
 bigint is a C++ class implementation for basic calculations that support arbitrary precision.
-The operation supported including `+, +=, ++, -, -=, --, *, *=, -(negation), ==, !=, <, <=, >, >=, <<`.
+The operation supported including `+, +=, ++, -, -=, --, *, *=, /, /=, -(negation), ==, !=, <, <=, >, >=, <<`.
 
 Note: For simplicity, in this documentation, `vector`, `string`, `int64_t`, and `uint8_t` refer to `vector`, `string`, `int64_t`, and `uint8_t` from the standard library.
 
@@ -106,7 +106,18 @@ bigint d("-123");	// d = -123
 	> **Note:**
 	> The `multiply_abs` function uses the same algorithm as the manual vertical multiplication algorithm. It uses a nested loop where each digit of one number is multiplied by every digit of the other number. The `result` vector is initialized with zeros instead of just reserving space. This is because, in vertical multiplication, the product of the current digits needs to be added to the digit above it along with `carry`. If the vector is not initialized to zeros, the first iteration will access garbage values. When the inner loop ends, the `carry` is assigned at the index `i + rhs.size()` instead of being pushed to the end of the `result` like `add_abs` and `subtract_abs`. This is because `result` is initialized with zeros, pushing the `carry` to the end will result in an incorrect answer.
 
+- `vector<uint8_t> divide_abs(const vector<uint8_t> &dividend, const vector<uint8_t> &divisor)`: Divides the magnitude of the dividend by the magnitude of the divisor. Returns the quotient as a vector.
+	1. Check if the divisor is zero. If so, throw a `logic_error`.
+	2. Check if the dividend is zero. If so, return a vector with one element 0.
+	3. Create a `quotient` and `current_sum` vector with the size of the dividend with initial value 0.
+	4. Loop until `dividend` is less than `current_sum` by calling `is_abs_less_than`
+      	1. Call `add_abs` with `current_sum` and `divisor` to get the next sum.
+      	2. Add 1 to `quotient`.
+	5. Minus 1 from `quotient` correct the value, as the final loop will always cause the `current_sum` to be greater than `dividend` and the `quotient` to be incremented by 1.
+	6. Return the `quotient` vector.
 
+	> **Note:**
+	> The `divide_abs` function uses the manual long division algorithm. It uses a nested loop where the `divisor` is subtracted from the `temp` vector until it is less than the `divisor`. The `count` is incremented each time the `divisor` is subtracted. The `count` is stored in the `result` vector at the current index. If the `temp` vector is zero, the loop breaks. If the `temp` vector is not zero, the next digit of the `dividend` is pushed to the `temp` vector.
 
 ## Class Methods (Public Operators)
 
@@ -197,6 +208,19 @@ bigint b(456);		// b = 456
 a *= b;			// a = 56088
 ```
 
+- `/=`: Divides the current bigint object by a bigint object. Returns the current bigint object after division.
+  1. Check if the divisor bigint object is zero. If so, throw a `logic_error`
+  2. Check if both bigint objects have the same sign. If not, set `isNegative` to true.
+  3. Call `divide_abs` helper function to divide the magnitudes of the two bigint objects.
+  4. Call `remove_leading_zeros` helper function to remove leading zeros in the result.
+  5. Check if the result is zero. If so, set `isNegative` to false to avoid negative zero.
+
+```c++
+bigint a(456);		// a = 456
+bigint b(123);		// b = 123
+a /= b;			// a = 3
+```
+
 - `+`: Adds two bigint objects. Returns the result of the addition as a new bigint object.
   1. Accepts a copy of the left-hand side bigint object and a reference to the right-hand side bigint object.
   2. Call `+=` with the two input bigint object.
@@ -228,6 +252,14 @@ bigint c = a - b;	// c = -333, a = 123, b = 456
 bigint a(123);		// a = 123
 bigint b(456);		// b = 456
 bigint c = a * b;	// c = 56088, a = 123, b = 456
+```
+
+- `/`: Divides two bigint objects. Returns the result of the division as a new bigint object.
+  1. Accepts a copy of the left-hand side bigint object and a reference to the right-hand side bigint object.
+  2. Call `/=` with the two input bigint object.
+  3. Return the result of the division.
+
+```c++
 ```
 
 - `==`: Returns true if the two bigint objects are equal, false otherwise.

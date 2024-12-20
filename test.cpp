@@ -740,6 +740,116 @@ public:
     }
 
     /**
+     * @brief Test if the division assignment operator correctly divides two positive numbers
+     * @return True iff the result is correct
+     */
+    static bool test_division_assignment_all_positive()
+    {
+        bigint num1(456);
+        const bigint num2(123);
+        num1 /= num2;
+        const auto expected = bigint(456 / 123);
+        return num1 == expected;
+    }
+
+    /**
+     * @brief Test if the division assignment operator correctly divides two negative numbers
+     * @return True iff the result is correct
+     */
+    static bool test_division_assignment_all_negative()
+    {
+        bigint num1(-456);
+        const bigint num2(-123);
+        num1 /= num2;
+        const auto expected = bigint(-456 / -123);
+        return num1 == expected;
+    }
+
+    /**
+     * @brief Test if the division assignment operator correctly divides a positive and a negative number
+     * @return True iff the result is correct
+     */
+    static bool test_division_assignment_positive_negative()
+    {
+        bigint num1(456);
+        const bigint num2(-123);
+        num1 /= num2;
+        const auto expected = bigint(456 / -123);
+        return num1 == expected;
+    }
+
+    /**
+     * @brief Test if the division assignment operator correctly divides a negative and a positive number
+     * @return True iff the result is correct
+     */
+    static bool test_division_assignment_negative_positive()
+    {
+        bigint num1(-456);
+        const bigint num2(123);
+        num1 /= num2;
+        const auto expected = bigint(-456 / 123);
+        return num1 == expected;
+    }
+
+    /**
+     * @brief Test if the division assignment operator correctly divides zero and a number
+     * @return True iff the result is zero
+     */
+    static bool test_division_assignment_zero()
+    {
+        bigint num1(0);
+        const bigint num2(-123);
+        num1 /= num2;
+        const auto expected = bigint(0);
+        return num1 == expected;
+    }
+
+    /**
+     * @brief Test if the division assignment operator correctly divides by 1
+     * @return True iff the result is correct
+     */
+    static bool test_division_assignment_one()
+    {
+        bigint num1(123);
+        const bigint num2(1);
+        num1 /= num2;
+        const auto expected = bigint(123 / 1);
+        return num1 == expected;
+    }
+
+    /**
+     * @brief Test if the division assignment operator correctly divides two same number
+     * @return
+     */
+    static bool test_division_assignment_same()
+    {
+        bigint num1(123);
+        const bigint num2(123);
+        num1 /= num2;
+        const auto expected = bigint(1);
+        return num1 == expected;
+    }
+
+    /**
+     * @brief Test if the division assignment operator triggers an exception when dividing by zero
+     * @return True iff the exception is thrown
+     */
+    static bool test_division_assignment_division_by_zero()
+    {
+        bigint num1(123);
+        const bigint num2(0);
+        try
+        {
+            num1 /= num2;
+            return false;
+        }
+        catch (const std::logic_error &)
+        {
+            return true;
+        }
+    }
+
+    /**
      * @brief Test if the addition operator correctly returns the sum of two positive numbers without modifying the original numbers
      * @return True iff the original numbers are not modified and the returned number is correct
      */
@@ -776,6 +886,19 @@ public:
         const auto result = num1 * num2;
         const auto expected = bigint(123 * 456);
         return result == expected && num1 == bigint(123) && num2 == bigint(456);
+    }
+
+    /**
+     * @brief Test if the division operator correctly returns the quotient of two numbers without modifying the original numbers
+     * @return True iff the original numbers are not modified and the returned number is correct
+     */
+    static bool test_division_operator_properties()
+    {
+        const bigint num1(456);
+        const bigint num2(123);
+        const auto result = num1 / num2;
+        const auto expected = bigint(456 / 123);
+        return result == expected && num1 == bigint(456) && num2 == bigint(123);
     }
 
     /**
@@ -1106,10 +1229,19 @@ public:
         run_test("Test Multiplication Assignment with Max Int64", test_multiplication_assignment_max);
         run_test("Test Multiplication Assignment with Min Int64", test_multiplication_assignment_min);
 
+        std::cout << "\nDivision Assignment Operator Tests:" << std::endl;
+        run_test("Test Division Assignment Positive / Positive", test_division_assignment_all_positive);
+        run_test("Test Division Assignment Negative / Negative", test_division_assignment_all_negative);
+        run_test("Test Division Assignment Positive / Negative", test_division_assignment_positive_negative);
+        run_test("Test Division Assignment Negative / Positive", test_division_assignment_negative_positive);
+        run_test("Test Division Assignment Zero", test_division_assignment_zero);
+        run_test("Test Division Assignment Division by Zero", test_division_assignment_division_by_zero);
+
         std::cout << "\nBinary Operator Tests:" << std::endl;
         run_test("Test Addition Operator Properties", test_addition_operator_properties);
         run_test("Test Subtraction Operator Properties", test_subtraction_operator_properties);
         run_test("Test Multiplication Operator Properties", test_multiplication_operator_properties);
+        run_test("Test Division Operator Properties", test_division_operator_properties);
 
         std::cout << "\nComparison Operator Tests:" << std::endl;
         run_test("Test Inequality Operator", test_inequality_operator);
