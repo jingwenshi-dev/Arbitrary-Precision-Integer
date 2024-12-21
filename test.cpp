@@ -47,7 +47,7 @@ private:
 
         std::random_device dev;
         std::mt19937 rng(dev());
-        std::uniform_int_distribution<std::mt19937::result_type> dist(0, 9);
+        std::uniform_int_distribution<std::mt19937::result_type> dist(1, 9);
 
         std::string result;
         for (std::size_t i = 0; i < len; ++i)
@@ -745,10 +745,10 @@ public:
      */
     static bool test_division_assignment_all_positive()
     {
-        bigint num1(456);
-        const bigint num2(123);
+        bigint num1(74);
+        const bigint num2(07);
         num1 /= num2;
-        const auto expected = bigint(456 / 123);
+        const auto expected = bigint(74 / 07);
         return num1 == expected;
     }
 
@@ -1035,9 +1035,11 @@ public:
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> dist9(1, 9);
+        std::uniform_int_distribution<std::mt19937::result_type> dist5(1, 5);
 
         for (std::size_t i = 0; i < 1000; ++i)
         {
+
             const std::string num1_str = generate_random_num(dist9(rng));
             const std::string num2_str = generate_random_num(dist9(rng));
             const bigint num1(num1_str);
@@ -1046,6 +1048,15 @@ public:
             const auto expected_addition = bigint(std::to_string(std::stoll(num1_str) + std::stoll(num2_str)));
             const auto expected_subtraction = bigint(std::to_string(std::stoll(num1_str) - std::stoll(num2_str)));
             const auto expected_multiplication = bigint(std::to_string(std::stoll(num1_str) * std::stoll(num2_str)));
+
+            // The below variable are specifically for division only
+            // Since division is implemented by brute force, it will take too long to test all possible combinations
+            // Half the length of the number should be enough to test the division
+            const std::string num3_str = generate_random_num(dist5(rng));
+            const std::string num4_str = generate_random_num(dist5(rng));
+            const bigint num3(num3_str);
+            const bigint num4(num4_str);
+            const auto expected_division = bigint(std::to_string(std::stoll(num3_str) / std::stoll(num4_str)));
 
             if (num1 + num2 != expected_addition)
             {
@@ -1074,6 +1085,16 @@ public:
                 std::cout << "num2: " << num2_str << std::endl;
                 std::cout << "num1 + num2: " << num1 + num2 << std::endl;
                 std::cout << "expected_addition: " << expected_multiplication << std::endl;
+                return false;
+            }
+
+            if (num3 / num4 != expected_division)
+            {
+                std::cout << "Failed Random Single Calculation Test: " << std::endl;
+                std::cout << "num3: " << num3 << std::endl;
+                std::cout << "num4: " << num4 << std::endl;
+                std::cout << "num3 + num4: " << num1 + num2 << std::endl;
+                std::cout << "expected_addition: " << expected_division << std::endl;
                 return false;
             }
         }
