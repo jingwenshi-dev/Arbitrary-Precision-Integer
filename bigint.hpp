@@ -209,10 +209,11 @@ private:
 
         std::vector<std::uint8_t> quotient(dividend.size());
         std::vector<std::uint8_t> current_sum(dividend.size());
+        current_sum.reserve(current_sum.size() + 1); // Max size, e.g. For 999/998, we have 998 + 998 = 1996 -> 4 digits
 
         while (!is_abs_less_than(dividend, current_sum))
         {
-            current_sum = add_abs(divisor, current_sum);
+            current_sum = add_abs(current_sum, divisor);
             quotient = add_abs(quotient, {1});
         }
 
