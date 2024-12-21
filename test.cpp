@@ -47,6 +47,8 @@ private:
 
         std::random_device dev;
         std::mt19937 rng(dev());
+        // The range does not include zero as it could lead to division by zero error which is not handled in the random test section.
+        // The division by zero is tested in the division assignment operator tests.
         std::uniform_int_distribution<std::mt19937::result_type> dist(1, 9);
 
         std::string result;
@@ -1160,6 +1162,15 @@ public:
                 std::cout << "num3: " << num3_str << std::endl;
                 std::cout << "num1 * (num2 - num3): " << num1 * (num2 - num3) << std::endl;
                 std::cout << "(num1 * num2) - (num1 * num3): " << (num1 * num2) - (num1 * num3) << std::endl;
+                return false;
+            }
+
+            // Since the division operator will take the floor of the result, the order of the division will affect the result
+            // Therefore, this fixed test is used to demonstrate the effect of the order of the division
+            if ((bigint(6) / bigint(3)) / bigint(2) != (bigint(6) / bigint(2)) / bigint(3))
+            {
+                std::cout << "Failed Random Order Test: " << std::endl;
+                std::cout << "6 / 3: " << bigint(6) / bigint(3) << std::endl;
                 return false;
             }
         }
